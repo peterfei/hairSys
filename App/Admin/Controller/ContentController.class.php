@@ -44,6 +44,7 @@ class ContentController extends CommonController {
 	public function index(){
 		$menu_db = D('Menu');
 		$currentpos = $menu_db->currentPos(I('get.menuid'));  //栏目位置
+		trace(111);
 		$this->assign(currentpos, $currentpos);
 		$this->display('index');
 	}

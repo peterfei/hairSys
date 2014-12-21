@@ -1,0 +1,90 @@
+<script type="text/javascript">
+$(function(){
+	$.formValidator.initConfig({formID:"member_add_detail_dialog_form",onError:function(msg){/*$.messager.alert('错误提示', msg, 'error');*/},onSuccess:memberAddDetailDialogFormSubmit,submitAfterAjaxPrompt:'有数据正在异步验证，请稍等...',inIframe:true});
+	// $("#member_add_dialog_form_name").formValidator({onShow:"请输入会员名称",onFocus:"会员名称不能为空",onCorrect:"输入正确"}).inputValidator({min:1,empty:{leftEmpty:false,rightEmpty:false,emptyError:'会员名称不能有空格'},onError:"会员名称不能为空"});
+	// $("#member_add_dialog_form_cid").formValidator({onShow:"请输入会员卡号",onFocus:"会员卡号不能为空",onCorrect:"输入正确"}).inputValidator({min:1,empty:{leftEmpty:false,rightEmpty:false,emptyError:'会员卡号不能有空格'},onError:"会员卡号不能为空"}).ajaxValidator({
+	// 		type: "post",
+	// 		url: "<{:U('Member/public_cidCheck')}>",
+	// 		data : {cid:function(){return $("#member_add_dialog_form_cid").val()} },
+	// 		datatype : "json",
+	// 		async:'false',
+	// 		success : function(res){
+	// 			var json = $.parseJSON(res);
+	//             return json.status == 1 ? false : true;
+	// 		},
+	// 		onError : "该卡号已存在",
+	// });
+	// $("#member_add_dialog_form_phone").formValidator({onShow:"请输入会员手机",onFocus:"会员手机不能为空",onCorrect:"输入正确"}).inputValidator({min:1,empty:{leftEmpty:false,rightEmpty:false,emptyError:'会员手机不能有空格'},onError:"会员手机不能为空"})
+	// 	.ajaxValidator({
+	// 			type: "post",
+	// 			url: "<{:U('Member/public_phoneCheck')}>",
+	// 			data : {phone:function(){return $("#member_add_dialog_form_phone").val()} },
+	// 			datatype : "json",
+	// 			async:'false',
+	// 			success : function(res){
+	// 				var json = $.parseJSON(res);
+	// 	            return json.status == 1 ? false : true;
+	// 			},
+	// 			onError : "该手机已存在",
+	// 	});
+	
+})
+function memberAddDetailDialogFormSubmit(){
+	$.post('<{:U('Member/memberAddDetail')}>', $("#member_add_detail_dialog_form").serialize(), function(res){
+		if(!res.status){
+			$.messager.alert('提示信息', res.info, 'error');
+		}else{
+			$.messager.alert('提示信息', res.info, 'info');
+			$('#member_add_detail_dialog').dialog("refresh");
+			// $('#member_add_detail_dialog').dialog('close');
+			// memberMemberListRefresh();
+		}
+	})
+}
+
+</script>
+<form id="member_add_detail_dialog_form">
+<table width="100%">
+	
+	<tr>
+		<td width="80">会员卡号：</td>
+		<td><input id="member_add_detail_dialog_form_cid"  class="text"  style="width:180px;height:22px"  value="<{$Think.get.cid}>" readonly="true" />
+		<input type="hidden" name="detail[mid]" value="<{$id}>"/>
+		<span style="color:red;padding-left:15px">卡内余额:(<{$cumulative}>元)</span>
+		</td>
+		<td><div id="member_add_detail_dialog_form_cidTip"></div>
+
+		</td>
+	</tr>
+	
+	
+	<tr>
+		<td>单次消费额：</td>
+		<td>
+			<input id="member_add_dialog_form_pay" name="detail[pay]" class="text"  style="width:40px;height:22px" value="0" />
+		</td>
+		<td><div id="member_add_detail_dialog_form_payTip"></div></td>
+	</tr>
+	
+	<!-- <tr>
+		<td>描述：</td>
+		<td colspan="2"><textarea name="info[remark]" style="width:80%;height:60px"></textarea></td>
+	</tr> -->
+	
+</table>
+
+	 <table class="easyui-datagrid" title="会员消费详细列表" style="width:600px;height:250px"
+            data-options="singleSelect:true,collapsible:true,url:'<{:U('MemberDetail/detailList',"mid={$id}")}>',method:'POST'">
+        <thead>
+            <tr>
+	            <th data-options="field:'name',width:80">姓名</th>
+	            <th data-options="field:'phone',width:80">手机</th>
+                <th data-options="field:'cid',width:80">卡号</th>
+                <th data-options="field:'pay',width:100">单次消费</th>
+                <th data-options="field:'cumulative',width:100">卡内余额</th>
+				<th data-options="field:'createtime',width:130">消费时间</th>
+               
+            </tr>
+        </thead>
+    </table>
+</form>

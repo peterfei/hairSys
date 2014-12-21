@@ -3,20 +3,21 @@ namespace Admin\Model;
 use Think\Model;
 use Think\Model\RelationModel;
 
-class MemberModel extends RelationModel{
-	protected $tableName = 'member';
+class MemberDetailModel extends RelationModel{
+	protected $tableName = 'member_detail';
 	protected $pk        = 'id';
+	protected $fields = array('FROM_UNIXTIME(createtime, "%Y-%m-%d %H:%i:%s") as createtime');
 	protected $_link = array(
-			"MemberDetail" => self::HAS_MANY,
-			// 'MemberDetail' => array(
-			// 		'mapping_type' => self::HAS_MANY,
-			// 		// 'class_name'   =>'MemberDetail',
-			// 		// 'foreign_key'  => 'mid',
-			// 	);
+			'Member' => array(
+					'mapping_type' => self::BELONGS_TO,
+					'class_name'   =>'Member',
+					'foreign_key'  => 'mid',
+					'as_fields' => 'phone,name,cid,blance',
+				),
 		);
 	//获取会员列表
 	public function getTree(){
-		$field = array('cid','name','sex','created','level','status','phone','`id` as `operateid`','blance');
+		$field = array('mid','`id` as `operateid`','pay');
 		$order = '`id` DESC';
 		$data = $this->field($field)->order($order)->select();
 		trace($data);
@@ -49,8 +50,7 @@ class MemberModel extends RelationModel{
 	}
 	//清除栏目相关缓存
 	public function clearCatche(){
-		S('member_memberlist', null);
-		S('category_public_categoryselect', null);
-		S('content_public_right', null);
+		S('member_member_detail_list', null);
+		
 	}
 }
