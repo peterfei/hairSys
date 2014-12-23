@@ -193,5 +193,31 @@ return array(
 		'group'   => '会员等级设置',
 		'editor'  => 'numberbox',
 		'default' => '0.70',
+	),
+	#员工工种设置
+	'EMPLOYEE_LEARN' => array(
+		'name'    => '助理',
+		'group'   => '员工工种设置',
+		'editor'  => 'numberbox',
+		'default' => '0.90',
+	),
+	'EMPLOYEE_JUNIOR' => array(
+		'name'    => '发型师',
+		'group'   => '员工工种设置',
+		'editor'  => 'numberbox',
+		'default' => '0.90',
+	),
+	'EMPLOYEE_MIDDLE' => array(
+		'name'    => '中级发型师',
+		'group'   => '员工工种设置',
+		'editor'  => 'numberbox',
+		'default' => '0.80',
+	),
+	'EMPLOYEE_ADVANCED' => array(
+		'name'    => '高级发型师',
+		'group'   => '员工工种设置',
+		'editor'  => 'numberbox',
+		'default' => '0.70',
 	)
+
 );
