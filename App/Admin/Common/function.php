@@ -33,10 +33,23 @@ function dict_attr($key = '', $fileName = 'Setting') {
     }
     if(!$key && !empty($_dictFileCache)) return $_dictFileCache;
     if ($key && isset($_dictFileCache[$key])) return $_dictFileCache[$key];
-    $data = require_once $file;
+    $data = require $file;
     // trace("/^".$key."_/","test");
     $data =array_intersect_key($data, array_flip(preg_grep("/^".$key."_/", array_keys($data))));
     return $data;
     // $_dictFileCache = $data;
     // return $key ? $data[$key] : $data;
+}
+
+/**
+ * 查询门店信息
+ */
+function findEmp($id)
+{
+    # code...
+    trace($id,"EMPID");
+    $empInfo = D('Employee')->find($id);
+    trace($empInfo,"EMPNAME");
+    return $empInfo['name'];
+    // return '';
 }

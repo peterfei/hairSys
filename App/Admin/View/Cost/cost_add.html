@@ -1,0 +1,121 @@
+<script type="text/javascript">
+$(function(){
+	$('#category_category_add_dialog_form_parentid').combotree({url:'<{:U('Category/public_categorySelect')}>'});
+	$.formValidator.initConfig({formID:"cost_add_dialog_form",onError:function(msg){/*$.messager.alert('错误提示', msg, 'error');*/},onSuccess:costAddDialogFormSubmit,submitAfterAjaxPrompt:'有数据正在异步验证，请稍等...',inIframe:true});
+	$("#cost_add_dialog_form_name").formValidator({onShow:"请输入会员名称",onFocus:"会员名称不能为空",onCorrect:"输入正确"}).inputValidator({min:1,empty:{leftEmpty:false,rightEmpty:false,emptyError:'会员名称不能有空格'},onError:"会员名称不能为空"});
+	$("#cost_add_dialog_form_cid").formValidator({onShow:"请输入会员卡号",onFocus:"会员卡号不能为空",onCorrect:"输入正确"}).inputValidator({min:1,empty:{leftEmpty:false,rightEmpty:false,emptyError:'会员卡号不能有空格'},onError:"会员卡号不能为空"}).ajaxValidator({
+			type: "post",
+			url: "<{:U('Cost/public_cidCheck')}>",
+			data : {cid:function(){return $("#cost_add_dialog_form_cid").val()} },
+			datatype : "json",
+			async:'false',
+			success : function(res){
+				var json = $.parseJSON(res);
+	            return json.status == 1 ? false : true;
+			},
+			onError : "该卡号已存在",
+	});
+	$("#cost_add_dialog_form_phone").formValidator({onShow:"请输入会员手机",onFocus:"会员手机不能为空",onCorrect:"输入正确"}).inputValidator({min:1,empty:{leftEmpty:false,rightEmpty:false,emptyError:'会员手机不能有空格'},onError:"会员手机不能为空"})
+		.ajaxValidator({
+				type: "post",
+				url: "<{:U('Cost/public_phoneCheck')}>",
+				data : {phone:function(){return $("#cost_add_dialog_form_phone").val()} },
+				datatype : "json",
+				async:'false',
+				success : function(res){
+					var json = $.parseJSON(res);
+		            return json.status == 1 ? false : true;
+				},
+				onError : "该手机已存在",
+		});
+	$("#cost_add_dialog_form_account").blur(function() {
+		// body...
+		var account = $("#cost_add_dialog_form_account").val();
+		// console.log(account);
+		$('#cost_add_dialog_form_real_pay').val(account);
+	});	
+	
+})
+function costAddDialogFormSubmit(){
+	$.post('<{:U('Cost/costAdd')}>', $("#cost_add_dialog_form").serialize(), function(res){
+		if(!res.status){
+			$.messager.alert('提示信息', res.info, 'error');
+		}else{
+			$.messager.alert('提示信息', res.info, 'info');
+			$('#cost_add_dialog').dialog('close');
+			costCostListRefresh();
+		}
+	})
+}
+function categoryCategoryAddDialogFormTypeChange(val){
+	if(val == '2'){
+		$('#category_category_add_dialog_form_url').show();
+	}else{
+		$('#category_category_add_dialog_form_url').val('');;
+		$('#category_category_add_dialog_form_url').hide();
+	}
+}
+</script>
+<form id="cost_add_dialog_form">
+<table width="100%">
+	<tr>
+		<td width="80">项目名称：</td>
+		<td><select id="cost_add_dialog_form_pid" name="info[pid]" class="easyui-combobox" data-options="editable:false,panelHeight:'auto',onChange:categoryCategoryAddDialogFormTypeChange" style="width:80px">
+				<foreach name="prjlist" item="type" key="key">
+					<option value="<{$key}>"><{$type.name}></option>
+				</foreach>
+			</select>
+		</td>
+		<td><div id="cost_add_dialog_form_pidTip"></div></td>
+	</tr>
+	<tr>
+		<td width="80">发型师：</td>
+		<td><select id="cost_add_dialog_form_eid" name="info[eid]" class="easyui-combobox" data-options="editable:false,panelHeight:'auto',onChange:categoryCategoryAddDialogFormTypeChange" style="width:80px">
+				<foreach name="emplist" item="type" key="key">
+					<option value="<{$type.id}>"><{$type.name}></option>
+				</foreach>
+			</select>
+		</td>
+		<td><div id="cost_add_dialog_form_enoTip"></div>
+
+		</td>
+	</tr>
+	<tr>
+		<td width="80">助理：</td>
+		<td><select id="cost_add_dialog_form_aid" name="info[aid]" class="easyui-combobox" data-options="editable:false,panelHeight:'auto',onChange:categoryCategoryAddDialogFormTypeChange" style="width:80px">
+				<foreach name="aidlist" item="type" key="key">
+					<option value="<{$type.id}>"><{$type.name}></option>
+				</foreach>
+			</select>
+		</td>
+		<td><div id="cost_add_dialog_form_enoTip"></div>
+
+		</td>
+	</tr>
+	<tr>
+		<td>单次消费额：</td>
+		<td>
+			<input id="cost_add_dialog_form_account" name="info[account]" class="text"  style="width:40px;height:22px" value="0" />
+		</td>
+		<td><div id="cost_add_dialog_form_accountTip"></div></td>
+	</tr>
+	<tr>
+		<td>折扣：</td>
+		<td>
+			<input id="cost_add_dialog_form_discount" name="info[discount]" class="text"  style="width:40px;height:22px" value="0" />
+		</td>
+		<td><div id="cost_add_dialog_form_discountTip"></div></td>
+	</tr>
+	<tr>
+		<td>实付：</td>
+		<td>
+			<input id="cost_add_dialog_form_real_pay" name="info[real_pay]" class="text"  style="width:40px;height:22px" value="0" />
+		</td>
+		<td><div id="cost_add_dialog_form_real_payTip"></div></td>
+	</tr>
+	<tr>
+		<td>是否点牌：</td>
+		<td colspan="2"><label><input type="radio" name="info[point]" value="0" checked />无点牌</label> <label><input type="radio" name="info[point]" value="1" />点牌</label></td>
+	</tr>
+</table>
+</form>

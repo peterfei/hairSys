@@ -28,7 +28,7 @@ class MemberController extends CommonController {
 				switch ($k){
 					// case 'username':
 					default:
-						$where[] = "`{$k}` = '{$v}'";
+						$where[] = "`{$k}` like '%{$v}%'";
 						break;
 					
 				}
@@ -57,9 +57,9 @@ class MemberController extends CommonController {
 		        'fields' => array(
 		        	'卡号'  => array('field'=>'cid','width'=>20,'align'=>'center','formatter'=>'memberViewFormatter'),
 		        	'会员名称' => array('field'=>'name','width'=>15),
-		        	'会员性别' => array('field'=>'sex','width'=>10),
+		        	'会员性别' => array('field'=>'sex','width'=>10,'formatter'=>'memberSexFormatter'),
 		        	'会员电话'    => array('field'=>'phone','width'=>20),
-    				'状态'    => array('field'=>'status','width'=>10),
+    				'状态'    => array('field'=>'status','width'=>10,'formatter'=>'memberStatusFormatter'),
 		        	'管理操作' => array('field'=>'operateid','width'=>50,'align'=>'center','formatter'=>'memberListOperateFormatter'),
     			)
 		    );
@@ -115,6 +115,8 @@ class MemberController extends CommonController {
     		$data['cumulative'] = $member_db ->where("id=".$data['mid'])->getField('blance'); 
     		//添加时间
 			$data['createtime'] = time();
+			//操作人ID
+			$data['operate_id'] = session('userid');
     		// trace($cumulativeAttr);
     		$id = $member_detail_db->add($data);
     		if($id){

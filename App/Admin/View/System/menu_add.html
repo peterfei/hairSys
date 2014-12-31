@@ -16,18 +16,18 @@ $(function(){
 		onError : "菜单名称已存在",
 		onWait : "请稍候..."
 	});
-	$("#system_menu_form_add_c").formValidator({onShow:"请输入模块名",onFocus:"模块名不能少于2个字符"}).inputValidator({min:2,empty:{leftEmpty:false,rightEmpty:false,emptyError:'模块名不能有空格'},onError:"模块名不能少于2个字符"}).regexValidator({
-		regExp:"^([A-Z][a-z1-9]+)+$",
-		param : "",
-		dataType:"string",
-		onError:"必须为首字母大写的驼峰法命名"
-	});
-	$("#system_menu_form_add_a").formValidator({onShow:"请输入方法名",onFocus:"方法名不能少于2个字符"}).inputValidator({min:2,empty:{leftEmpty:false,rightEmpty:false,emptyError:'方法名不能有空格'},onError:"方法名不能少于2个字符"}).regexValidator({
-		regExp:"^[a-z][a-z1-9_]+([A-Z][a-z1-9]+)?$",
-		param : "",
-		dataType:"string",
-		onError:"必须为首字母小写的驼峰法命名"
-     });
+	// $("#system_menu_form_add_c").formValidator({onShow:"请输入模块名",onFocus:"模块名不能少于2个字符"}).inputValidator({min:2,empty:{leftEmpty:false,rightEmpty:false,emptyError:'模块名不能有空格'},onError:"模块名不能少于2个字符"}).regexValidator({
+	// 	regExp:"^([A-Z][a-z1-9]+)+$",
+	// 	param : "",
+	// 	dataType:"string",
+	// 	onError:"必须为首字母大写的驼峰法命名"
+	// });
+	// $("#system_menu_form_add_a").formValidator({onShow:"请输入方法名",onFocus:"方法名不能少于2个字符"}).inputValidator({min:2,empty:{leftEmpty:false,rightEmpty:false,emptyError:'方法名不能有空格'},onError:"方法名不能少于2个字符"}).regexValidator({
+	// 	regExp:"^[a-z][a-z1-9_]+([A-Z][a-z1-9]+)?$",
+	// 	param : "",
+	// 	dataType:"string",
+	// 	onError:"必须为首字母小写的驼峰法命名"
+ //     });
 })
 function systemMenuAddDialogFormSubmit(){
 	$.post('<{:U('System/menuAdd')}>', $("#system_menu_add_dialog_form").serialize(), function(res){

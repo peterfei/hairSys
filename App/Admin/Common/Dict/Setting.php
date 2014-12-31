@@ -218,6 +218,74 @@ return array(
 		'group'   => '员工工种设置',
 		'editor'  => 'numberbox',
 		'default' => '0.70',
+	),
+	#项目
+	'ITEM_WASH' => array(
+		'name'    => '洗',
+		'group'   => '美发项目设置',
+		'editor'  => 'numberbox',
+		'default' => '0.90',
+	),
+	'ITEM_HAIRDRESSING' => array(
+		'name'    => '剪发',
+		'group'   => '美发项目设置',
+		'editor'  => 'numberbox',
+		'default' => '0.90',
+	),
+	'ITEM_BLOW' => array(
+		'name'    => '吹',
+		'group'   => '美发项目设置',
+		'editor'  => 'numberbox',
+		'default' => '0.90',
+	),
+	'ITEM_STYLIST' => array(
+		'name'    => '造型',
+		'group'   => '美发项目设置',
+		'editor'  => 'numberbox',
+		'default' => '0.90',
+	),
+	'ITEM_PERM' => array(
+		'name'    => '烫发',
+		'group'   => '美发项目设置',
+		'editor'  => 'numberbox',
+		'default' => '0.90',
+	),
+	'ITEM_DYE' => array(
+		'name'    => '染发',
+		'group'   => '美发项目设置',
+		'editor'  => 'numberbox',
+		'default' => '0.90',
+	),
+	#门店
+	'STORE_1' => array(
+		'name'    => '门店一',
+		'group'   => '门店',
+		'editor'  => 'numberbox',
+		'default' => '1',
+	),
+	'STORE_2' => array(
+		'name'    => '门店二',
+		'group'   => '门店',
+		'editor'  => 'numberbox',
+		'default' => '2',
+	),
+   #员工级别
+   'LEVEL_1' => array(
+		'name'    => '级别1',
+		'group'   => '员工级别',
+		'editor'  => 'text',
+		'default' => '22,24',
+	),
+   'LEVEL_2' => array(
+		'name'    => '级别2',
+		'group'   => '员工级别',
+		'editor'  => 'text',
+		'default' => '24,26',
+	),
+   'LEVEL_3' => array(
+		'name'    => '级别3',
+		'group'   => '员工级别',
+		'editor'  => 'text',
+		'default' => '26,28',
 	)
-
 );

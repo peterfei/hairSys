@@ -42,10 +42,13 @@
 // 	var list = <{:json_encode(C('CONTENT_CATEGORY_TYPE'))}>;
 // 	return list[key] || null;
 // }
-// //状态格式化
-// function categoryCategoryListStateFormatter(val){
-// 	return val == '1' ? '启用' : '<font color="red">禁用</font>';
-// }
+//状态格式化
+function memberSexFormatter(val){
+	return val == '1' ? '男' : '女';
+}
+function memberStatusFormatter(val){
+	return val == '0' ? '正常' : '锁定';
+}
 //操作格式化
 function memberListOperateFormatter(id){
 	var btn = [];

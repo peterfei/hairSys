@@ -1,0 +1,137 @@
+<taglib name="Admin\TagLib\EasyUI" />
+
+<easyui:datagrid options="datagrid.options" fields="datagrid.fields" />
+
+<div id="cost_costlist_datagrid_toolbar" style="padding:1px;height:auto">
+	<form style="border-bottom:1px solid #ddd;margin-bottom:1px;padding:5px">
+		手机号:
+		<input type="text" name="search[phone]" style="width:100px;padding:2px">		
+		员工名: 
+		<input type="text" name="search[name]" style="width:100px;padding:2px"/>
+		<!-- 时 间: <input name="search[begin]" class="easyui-datebox" style="width:100px">
+		至: <input name="search[end]" class="easyui-datebox" style="width:100px"> -->
+		
+		<a href="javascript:;" onclick="costListDatagridSearch(this)" class="easyui-linkbutton" iconCls="icons-map-magnifier">搜索</a>
+	</form>
+	<div>
+		<a href="javascript:;" class="easyui-linkbutton" data-options="plain:true,iconCls:'icons-arrow-add'" onclick="costListAdd()">添加普通单次消费</a>
+		<a href="javascript:;" class="easyui-linkbutton" data-options="plain:true,iconCls:'icons-arrow-arrow_refresh'" onclick="costCostListRefresh()">刷新</a>
+		<a href="javascript:;" class="easyui-linkbutton" data-options="plain:true,iconCls:'icons-arrow-arrow_up'" onclick="costListOrder()">排序</a>
+	</div>
+</div>
+<!-- 添加栏目 -->
+<div id="cost_add_dialog" class="easyui-dialog" title="添加普通单次消费" data-options="modal:true,closed:true,iconCls:'icons-application-application_add',buttons:[{text:'确定',iconCls:'icons-other-tick',handler:function(){$('#cost_add_dialog_form').submit();}},{text:'取消',iconCls:'icons-arrow-cross',handler:function(){$('#cost_add_dialog').dialog('close');}}]" style="width:600px;height:400px;"></div>
+
+<!-- 编辑栏目 -->
+<div id="cost_edit_dialog" class="easyui-dialog" title="编辑栏目" data-options="modal:true,closed:true,iconCls:'icons-application-application_edit',buttons:[{text:'确定',iconCls:'icons-other-tick',handler:function(){$('#cost_edit_dialog_form').submit();}},{text:'取消',iconCls:'icons-arrow-cross',handler:function(){$('#cost_edit_dialog').dialog('close');}}]" style="width:500px;height:300px;"></div>
+
+<!-- 查看详细信息 -->
+<div id="cost_add_detail_dialog" class="easyui-dialog word-wrap" title="增加会员消费记录" data-options="modal:true,closed:true,iconCls:'icons-other-information',buttons:[{text:'增加消费',iconCls:'icons-other-tick',handler:function(){$('#cost_add_detail_dialog_form').submit();}},{text:'关闭',iconCls:'icons-arrow-cross',handler:function(){$('#cost_add_detail_dialog').dialog('close');}}]" style="width:600px;height:360px;padding:5px"></div>
+<script type="text/javascript">
+// var cost_costlist_treegrid_toolbar = [
+// 	{ text: '增加会员', iconCls: 'icons-arrow-add', handler: costListAdd },
+// 	{ text: '刷新', iconCls: 'icons-arrow-arrow_refresh', handler: costCostListRefresh },
+// 	{ text: '排序', iconCls: 'icons-arrow-arrow_down', handler: costListOrder }
+// ];
+// //排序格式化
+// function categoryCategoryListOrderFormatter(val, arr){
+// 	return '<input class="category_categorylist_order_input" type="text" name="order['+arr['catid']+']" value="'+ val +'" size="2" style="text-align:center">';
+// }
+//类型格式化
+function costEmpFormatter(key){
+	var key = key;
+	return  '<{:findEmp()}>' ;
+
+}
+//状态格式化
+function costPointFormatter(val){
+	return val == '1' ? '已点牌' : '<font color="red">未点牌</font>';
+}
+//操作格式化
+function costListOperateFormatter(id){
+	var btn = [];
+	btn.push('<a href="javascript:;" onclick="costDetailDialog(this)"  data-cid="'+id+'">消费</a>');
+	// btn.push('<a href="javascript:;" onclick="categoryCategoryListEdit('+id+')">修改</a>');
+	// btn.push('<a href="javascript:;" onclick="categoryCategoryListDelete('+id+')">删除</a>');
+	return btn.join(' | ');
+}
+
+//刷新
+function costCostListRefresh(){
+	// $('#cost_costlist_treegrid').html('');
+	$('#cost_costlist_datagrid').datagrid('reload');
+}
+//添加
+function costListAdd(parentid){
+	if(typeof(parentid) !== 'number') parentid = 0;
+	var url = '<{:U('Cost/costAdd')}>';
+	url += url.indexOf('?') != -1 ? '&parentid='+parentid : '?parentid='+parentid;
+	$('#cost_add_dialog').dialog({href:url});
+	$('#cost_add_dialog').dialog('open');
+}
+//编辑
+function categoryCategoryListEdit(id){
+	if(typeof(id) !== 'number'){
+		$.messager.alert('提示信息', '未选择栏目', 'error');
+		return false;
+	}
+	var url = '<{:U('Category/categoryEdit')}>';
+	url += url.indexOf('?') != -1 ? '&id='+id : '?id='+id;
+	$('#category_category_edit_dialog').dialog({href:url});
+	$('#category_category_edit_dialog').dialog('open');
+}
+//删除
+function categoryCategoryListDelete(id){
+	if(typeof(id) !== 'number'){
+		$.messager.alert('提示信息', '未选择菜单', 'error');
+		return false;
+	}
+	$.messager.confirm('提示信息', '确定要删除吗？', function(result){
+		if(!result) return false;
+		$.post('<{:U('Category/categoryDelete')}>', {id: id}, function(res){
+			if(!res.status){
+				$.messager.alert('提示信息', res.info, 'error');
+			}else{
+				$.messager.alert('提示信息', res.info, 'info');
+				costListRefresh();
+			}
+		}, 'json');
+	});
+}
+//排序
+function costListOrder(){
+	$.post('<{:U('Cost/costOrder')}>', $('.category_categorylist_order_input').serialize(), function(res){
+		if(!res.status){
+			$.messager.alert('提示信息', res.info, 'error');
+		}else{
+			$.messager.alert('提示信息', res.info, 'info');
+			costListRefresh();
+		}
+	}, 'json');
+}
+
+//搜索
+function costListDatagridSearch(that){
+	var queryParams = $('#cost_costlist_datagrid').datagrid('options').queryParams;
+	$.each($(that).parent('form').serializeArray(), function() {
+		queryParams[this['name']] = this['value'];
+	});
+	// console.log(queryParams);
+	$('#cost_costlist_datagrid').datagrid('reload');
+}
+
+//参数格式化
+function costViewFormatter(val){
+	return '<a href="javascript:;" onclick="costDetailDialog(this);" data-cid="'+val+'">'+val+'</a>';
+}
+//查看详细信息
+function costDetailDialog(that){
+	// if(typeof(parentid) !== 'number') parentid = 0;
+	var url = '<{:U('Cost/costAddDetail')}>';
+	url += url.indexOf('?') != -1 ? '&cid='+$(that).data("cid") : '?cid='+$(that).data("cid");
+	var id = 'cost_add_detail_dialog';
+	// console.log($(that).data("cid"));
+	$('#'+id).dialog({href:url});
+	$('#'+id).dialog('open');
+}
+</script>

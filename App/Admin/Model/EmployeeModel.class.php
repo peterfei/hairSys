@@ -6,14 +6,14 @@ use Think\Model\RelationModel;
 class EmployeeModel extends RelationModel{
 	protected $tableName = 'employee';
 	protected $pk        = 'id';
-	// protected $_link = array(
-	// 		"MemberDetail" => self::HAS_MANY,
-	// 		// 'MemberDetail' => array(
-	// 		// 		'mapping_type' => self::HAS_MANY,
-	// 		// 		// 'class_name'   =>'MemberDetail',
-	// 		// 		// 'foreign_key'  => 'mid',
-	// 		// 	);
-	// 	);
+	protected $_link = array(
+			"Cost" => self::HAS_MANY,
+			// 'MemberDetail' => array(
+			// 		'mapping_type' => self::HAS_MANY,
+			// 		// 'class_name'   =>'MemberDetail',
+			// 		// 'foreign_key'  => 'mid',
+			// 	);
+		);
 	//获取会员列表
 	public function getTree(){
 		$field = array('cid','name','sex','created','level','status','phone','`id` as `operateid`','blance');

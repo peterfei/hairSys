@@ -3,14 +3,14 @@ namespace Admin\Controller;
 use Admin\Controller\CommonController;
 
 /**
- * 员工管理模块
+ * 普通消费管理模块
  * @author peterfei
  */
-class EmployeeController extends CommonController {
+class CostController extends CommonController {
 	/**
-	 * 员工管理列表
+	 * 普通消费管理列表
 	 */
-	public function employeeList($page=1, $rows=10, $search = array(), $order = 'desc'){
+	public function costList($page=1, $rows=10, $search = array(), $order = 'desc'){
 		if(IS_POST){
 			// if(S('member_memberlist')){
    //  			$data = S('member_memberlist');
@@ -21,7 +21,7 @@ class EmployeeController extends CommonController {
    //  		}
    //  		$this->ajaxReturn($data);
     		//搜索
-    		$employee_db = D('Employee');
+    		$cost_db = D('Cost');
 			$where = array();
 			foreach ($search as $k=>$v){
 				if(!$v) continue;
@@ -36,10 +36,11 @@ class EmployeeController extends CommonController {
 			$where = implode(' and ', $where);
 			trace($where);
 			$limit=($page - 1) * $rows . "," . $rows;
-			$total = $employee_db->where($where)->count();
+			$total = $cost_db->where($where)->count();
 			$order = "id ".$order;
-			$field= array('eno as operateid','eno','name','age','phone','status','work_age','type');
-			$list = $total ? $employee_db->field($field)->where($where)->order($order)->limit($limit)->select() : array();
+			$field= array('id as operateid','pid','eid','aid','account','discount','real_pay','FROM_UNIXTIME(createdtime, "%Y-%m-%d %H:%i:%s") as createdtime','FROM_UNIXTIME(modified, "%Y-%m-%d %H:%i:%s") as modified','operate_id','point');
+			$list = $total ? $cost_db->field($field)->relation('Employee')->where($where)->order($order)->limit($limit)->select() : array();
+			trace($list);
     		$data = array('total'=>$total, 'rows'=>$list);
     		$this->ajaxReturn($data);
 		}else{
@@ -49,41 +50,46 @@ class EmployeeController extends CommonController {
 			$datagrid = array(
 		        'options'       => array(
     				'title'     => $currentpos,
-    				'url'       => U('Employee/employeeList', array('grid'=>'treegrid')),
-    				'idField'   => 'eno',
+    				'url'       => U('Cost/costList', array('grid'=>'treegrid')),
+    				'idField'   => 'id',
     				'treeField' => 'name',
-    				'toolbar'   => '#employee_employeelist_datagrid_toolbar',
+    				'toolbar'   => '#cost_costlist_datagrid_toolbar',
     			),
 		        'fields' => array(
-		        	'工号'  => array('field'=>'eno','width'=>20,'align'=>'center','formatter'=>'employeeViewFormatter'),
-		        	'员工名称' => array('field'=>'name','width'=>15),
-		        	'员工工龄' => array('field'=>'work_age','width'=>10),
-		        	'员工电话'    => array('field'=>'phone','width'=>20),
-		        	'工种'    => array('field'=>'type','width'=>20),
-    				'状态'    => array('field'=>'status','width'=>10),
-		        	'管理操作' => array('field'=>'operateid','width'=>50,'align'=>'center','formatter'=>'employeeListOperateFormatter'),
+		        	'项目'  => array('field'=>'pid','width'=>20,'align'=>'center','sortable'=>true),
+		        	'发型师' => array('field'=>'eid','width'=>15,'sortable'=>true,'formatter'=>'costEmpFormatter'),
+		        	'助理' => array('field'=>'aid','width'=>10,'sortable'=>true),
+		        	'消费时间'    => array('field'=>'createdtime','width'=>20),
+		        	'是否点牌'    => array('field'=>'point','width'=>10,'formatter'=>'costPointFormatter','sortable'=>true),
+		        	'应付款'    => array('field'=>'account','width'=>20,'sortable'=>true),
+    				'折扣'    => array('field'=>'discount','width'=>10,'sortable'=>true),
+    				'实付'    => array('field'=>'real_pay','width'=>10,'sortable'=>true),
+    				'操作人'    => array('field'=>'operate_id','width'=>10,'sortable'=>true),
+		        	'管理操作' => array('field'=>'operateid','width'=>50,'align'=>'center','formatter'=>'costListOperateFormatter'),
     			)
 		    );
 		    $this->assign('datagrid', $datagrid);
-			$this->display('employee_list');
+			$this->display('cost_list');
 		}
 	}
 	
 	/**
 	 * 添加会员
 	 */
-	public function employeeAdd(){
+	public function costAdd(){
 		if(IS_POST){
-			$employee_db = D('Employee');
+			$cost_db = D('Cost');
 			$data = I('post.info');
+			trace($data);
 			//添加时间
 			$data['createdtime'] = time();
-			// $data['modified'] = time();
-			
+			$data['modified'] = time();
     		// $data['ismenu'] = $data['ismenu'] ? '1' : '0';
-    		$id = $employee_db->add($data);
+    		//操作人ID
+			$data['operate_id'] = session('userid');
+    		$id = $cost_db->add($data);
     		if($id){
-    			$employee_db->clearCatche();
+    			$cost_db->clearCatche();
     			$this->success('添加成功');
     		}else {
     			$this->error('添加失败');
@@ -91,11 +97,15 @@ class EmployeeController extends CommonController {
 		}else{
 			// dump(dict_attr('MEMER'));
 			// dict();
-			trace(dict_attr('EMPLOYEE','Setting'));
-			trace(dict_attr('LEVEL','Setting'));
-			$this->assign('levellist', dict_attr('LEVEL'));
+			$empoyee_db = D('Employee');
+			$employ = $empoyee_db -> field(array('id','name'))->where("status=1 and type!='EMPLOYEE_LEARN'")->select();
+			$aid = $empoyee_db -> field(array('id','name'))->where("status=1 and type='EMPLOYEE_LEARN'")->select();
+			$this->assign('emplist', $employ);
+			$this->assign('aidlist', $aid);
+
+			$this->assign('prjlist', dict_attr('ITEM'));
 			$this->assign('typelist', dict_attr('EMPLOYEE'));
-			$this->display('employee_add');
+			$this->display('cost_add');
 		}
 	}
 	
@@ -232,8 +242,8 @@ class EmployeeController extends CommonController {
 	{
 		// if(I('post.default') == $name) $this->error('菜单名称相同');
 		
-        $Employee = D('Employee');
-        $exists = $Employee->checkPhone(I('post.phone'));
+        $Cost = D('Cost');
+        $exists = $Cost->checkPhone(I('post.phone'));
         if ($exists) {
             $this->success('该手机已存在');
         }else{
