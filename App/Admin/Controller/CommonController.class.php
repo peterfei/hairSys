@@ -82,6 +82,7 @@ class CommonController extends Controller {
 	 */
 	final private function manage_log(){
 		//判断是否记录
+		trace(C('SAVE_LOG_OPEN'));
  		if(C('SAVE_LOG_OPEN')){
  			$action = ACTION_NAME;
  			if($action == '' || strchr($action,'public') || (CONTROLLER_NAME =='Index' && in_array($action, array('login','code'))) ||  CONTROLLER_NAME =='Upload') {

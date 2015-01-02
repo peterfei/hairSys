@@ -37,7 +37,7 @@ class MemberController extends CommonController {
 			trace($where);
 			$limit=($page - 1) * $rows . "," . $rows;
 			$total = $member_db->where($where)->count();
-			$order = "id ".$order;
+			$order = "modified ".$order.", id desc";
 			$field= array('cid as operateid','cid','name','sex','phone','status');
 			$list = $total ? $member_db->field($field)->where($where)->order($order)->limit($limit)->select() : array();
     		$data = array('total'=>$total, 'rows'=>$list);
@@ -108,6 +108,8 @@ class MemberController extends CommonController {
 			$member_db = D('Member');
 			$member_detail_db = D('MemberDetail');
 			$update = $member_db ->where("id=".$data['mid'])->setDec('blance',$data['pay']);
+			$modified['modified'] = time();
+			$member_db ->where("id=".$data['mid'])->save($modified);
 			// trace($member_db ->where("id=".$data['mid']));
     		// $data['ismenu'] = $data['ismenu'] ? '1' : '0';
     		// 累计额度
@@ -147,6 +149,50 @@ class MemberController extends CommonController {
 		$this->display('member_add_detail');
 		}
 		
+	}
+/**
+ * [memberPay 会员充值]
+ * @return [type] [description]
+ */
+	public function memberPay(){
+		if(IS_POST){
+			$member_db = D('Member');
+			$data = I('post.detail');
+			trace($data);
+    		// $data['ismenu'] = $data['ismenu'] ? '1' : '0';
+    		$member_db = D('Member');
+			$member_detail_db = D('MemberDetail');
+			$update = $member_db ->where("id=".$data['mid'])->setInc('blance',$data['pay']);
+			// $data['cumulative'] = 0
+			$data['cumulative'] = $member_db ->where("id=".$data['mid'])->getField('blance'); 
+			//会员充值
+			$data['re_pay'] = $data['pay'] ;
+    		$data['pay'] =0;
+			 
+    		//添加时间
+			$data['createtime'] = time();
+			
+			//操作人ID
+			$data['operate_id'] = session('userid');
+    		// trace($cumulativeAttr);
+    		$id = $member_detail_db->add($data);
+    		if($update){
+    			$member_db->clearCatche();
+    			$this->success('会员充值成功');
+    		}else {
+    			$this->error('会员充值失败');
+    		}
+		}else{
+			// dump(dict_attr('MEMER'));
+			// dict();
+			$member_db = D('Member');
+			$idAttr=$member_db->where(array('cid'=>I('get.cid')))->field(array('id','blance'))->find();
+			trace($idAttr,"ID");
+			$this->assign('id',$idAttr['id']);
+			$this->assign('cumulative',$idAttr['blance']);
+			// $this->assign('typelist', dict_attr('MEMER'));
+			$this->display('member_pay');
+		}
 	}
 	/**
 	 * 编辑栏目

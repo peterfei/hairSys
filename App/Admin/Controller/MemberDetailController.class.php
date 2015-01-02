@@ -29,7 +29,7 @@ class MemberDetailController extends CommonController {
 			$where = "mid = ".I('get.mid');
 			// trace($member_detail_db->relation('Member')->find(1),"RELATION");
 			$limit=($page - 1) * $rows . "," . $rows;
-			$field = array('FROM_UNIXTIME(createtime, "%Y-%m-%d %H:%i:%s") as createtime','mid','cumulative','pay');
+			$field = array('FROM_UNIXTIME(createtime, "%Y-%m-%d %H:%i:%s") as createtime','mid','cumulative','pay','re_pay');
 			$total = $member_detail_db->relation('Member')->field($field)->where($where)->count();
 			$order = "id ".$order;
 			$list = $total ? $member_detail_db->relation('Member')->field($field)->where($where)->order($order)->limit($limit)->select() : array();

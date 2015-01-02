@@ -1,6 +1,6 @@
 <script type="text/javascript">
 $(function(){
-	$.formValidator.initConfig({formID:"member_add_detail_dialog_form",onError:function(msg){/*$.messager.alert('错误提示', msg, 'error');*/},onSuccess:memberAddDetailDialogFormSubmit,submitAfterAjaxPrompt:'有数据正在异步验证，请稍等...',inIframe:true});
+	$.formValidator.initConfig({formID:"member_pay_dialog_form",onError:function(msg){/*$.messager.alert('错误提示', msg, 'error');*/},onSuccess:memberAddDetailDialogFormSubmit,submitAfterAjaxPrompt:'有数据正在异步验证，请稍等...',inIframe:true});
 	// $("#member_add_dialog_form_name").formValidator({onShow:"请输入会员名称",onFocus:"会员名称不能为空",onCorrect:"输入正确"}).inputValidator({min:1,empty:{leftEmpty:false,rightEmpty:false,emptyError:'会员名称不能有空格'},onError:"会员名称不能为空"});
 	// $("#member_add_dialog_form_cid").formValidator({onShow:"请输入会员卡号",onFocus:"会员卡号不能为空",onCorrect:"输入正确"}).inputValidator({min:1,empty:{leftEmpty:false,rightEmpty:false,emptyError:'会员卡号不能有空格'},onError:"会员卡号不能为空"}).ajaxValidator({
 	// 		type: "post",
@@ -30,12 +30,12 @@ $(function(){
 	
 })
 function memberAddDetailDialogFormSubmit(){
-	$.post('<{:U('Member/memberAddDetail')}>', $("#member_add_detail_dialog_form").serialize(), function(res){
+	$.post('<{:U('Member/memberPay')}>', $("#member_pay_dialog_form").serialize(), function(res){
 		if(!res.status){
 			$.messager.alert('提示信息', res.info, 'error');
 		}else{
 			$.messager.alert('提示信息', res.info, 'info');
-			$('#member_add_detail_dialog').dialog("refresh");
+			$('#member_pay_dialog').dialog("refresh");
 			// $('#member_add_detail_dialog').dialog('close');
 			// memberMemberListRefresh();
 		}
@@ -43,7 +43,7 @@ function memberAddDetailDialogFormSubmit(){
 }
 
 </script>
-<form id="member_add_detail_dialog_form">
+<form id="member_pay_dialog_form">
 <table width="100%">
 	
 	<tr>
@@ -59,7 +59,7 @@ function memberAddDetailDialogFormSubmit(){
 	
 	
 	<tr>
-		<td>单次消费额：</td>
+		<td>充值金额：</td>
 		<td>
 			<input id="member_add_dialog_form_pay" name="detail[pay]" class="text"  style="width:40px;height:22px" value="0" />
 		</td>
@@ -73,7 +73,7 @@ function memberAddDetailDialogFormSubmit(){
 	
 </table>
 
-	 <table class="easyui-datagrid" title="会员消费详细列表" style="width:600px;height:250px"
+	<!--  <table class="easyui-datagrid" title="会员消费详细列表" style="width:600px;height:250px"
             data-options="singleSelect:true,collapsible:true,url:'<{:U('MemberDetail/detailList',"mid={$id}")}>',method:'POST'">
         <thead>
             <tr>
@@ -81,11 +81,10 @@ function memberAddDetailDialogFormSubmit(){
 	            <th data-options="field:'phone',width:80">手机</th>
                 <th data-options="field:'cid',width:80">卡号</th>
                 <th data-options="field:'pay',width:100">单次消费</th>
-                <th data-options="field:'re_pay',width:100">单次充值</th>
                 <th data-options="field:'cumulative',width:100">卡内余额</th>
 				<th data-options="field:'createtime',width:130">消费时间</th>
                
             </tr>
         </thead>
-    </table>
+    </table> -->
 </form>

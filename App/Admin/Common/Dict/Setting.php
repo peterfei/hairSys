@@ -26,13 +26,13 @@ return array(
 	// 	'default' => '',
 	// ),
 	
-	// /* 后台设置  */
-	// 'SAVE_LOG_OPEN' => array(
-	// 	'name'    => '开启后台日志记录',
-	// 	'group'   => '后台设置',
-	// 	'editor'  => array('type'=>'checkbox','options'=>array('on'=>'开启','off'=>'关闭')),
-	// 	'default' => C('SAVE_LOG_OPEN') ? '开启' : '关闭',
-	// ),
+	/* 后台设置  */
+	'SAVE_LOG_OPEN' => array(
+		'name'    => '开启后台日志记录',
+		'group'   => '后台设置',
+		'editor'  => array('type'=>'checkbox','options'=>array('on'=>'开启','off'=>'关闭')),
+		'default' => C('SAVE_LOG_OPEN') ? '开启' : '关闭',
+	),
 	// 'MAX_LOGIN_TIMES' => array(
 	// 	'name'    => '登录失败后允许最大次数',
 	// 	'group'   => '后台设置',

@@ -4,6 +4,8 @@
 
 <div id="member_memberlist_datagrid_toolbar" style="padding:1px;height:auto">
 	<form style="border-bottom:1px solid #ddd;margin-bottom:1px;padding:5px">
+	    卡号:
+	    <input type="text" name="search[cid]" style="width:100px;padding:2px">
 		手机号:
 		<input type="text" name="search[phone]" style="width:100px;padding:2px">		
 		会员名: 
@@ -27,7 +29,12 @@
 
 <!-- 查看详细信息 -->
 <div id="member_add_detail_dialog" class="easyui-dialog word-wrap" title="增加会员消费记录" data-options="modal:true,closed:true,iconCls:'icons-other-information',buttons:[{text:'增加消费',iconCls:'icons-other-tick',handler:function(){$('#member_add_detail_dialog_form').submit();}},{text:'关闭',iconCls:'icons-arrow-cross',handler:function(){$('#member_add_detail_dialog').dialog('close');}}]" style="width:600px;height:360px;padding:5px"></div>
+
+<div id="member_pay_dialog" class="easyui-dialog word-wrap" title="会员充值" data-options="modal:true,closed:true,iconCls:'icons-other-information',buttons:[{text:'会员充值',iconCls:'icons-other-tick',handler:function(){$('#member_pay_dialog_form').submit();}},{text:'关闭',iconCls:'icons-arrow-cross',handler:function(){$('#member_pay_dialog').dialog('close');}}]" style="width:600px;height:360px;padding:5px"></div>
+<!-- 充值 -->
 <script type="text/javascript">
+
+
 // var member_memberlist_treegrid_toolbar = [
 // 	{ text: '增加会员', iconCls: 'icons-arrow-add', handler: memberListAdd },
 // 	{ text: '刷新', iconCls: 'icons-arrow-arrow_refresh', handler: memberMemberListRefresh },
@@ -53,6 +60,7 @@ function memberStatusFormatter(val){
 function memberListOperateFormatter(id){
 	var btn = [];
 	btn.push('<a href="javascript:;" onclick="memberDetailDialog(this)"  data-cid="'+id+'">消费</a>');
+	btn.push('<a href="javascript:;" onclick="memberPayDialog(this)"  data-cid="'+id+'">充值</a>');
 	// btn.push('<a href="javascript:;" onclick="categoryCategoryListEdit('+id+')">修改</a>');
 	// btn.push('<a href="javascript:;" onclick="categoryCategoryListDelete('+id+')">删除</a>');
 	return btn.join(' | ');
@@ -132,6 +140,16 @@ function memberDetailDialog(that){
 	var url = '<{:U('Member/memberAddDetail')}>';
 	url += url.indexOf('?') != -1 ? '&cid='+$(that).data("cid") : '?cid='+$(that).data("cid");
 	var id = 'member_add_detail_dialog';
+	// console.log($(that).data("cid"));
+	$('#'+id).dialog({href:url});
+	$('#'+id).dialog('open');
+}
+//充值
+function memberPayDialog(that){
+	// if(typeof(parentid) !== 'number') parentid = 0;
+	var url = '<{:U('Member/memberPay')}>';
+	url += url.indexOf('?') != -1 ? '&cid='+$(that).data("cid") : '?cid='+$(that).data("cid");
+	var id = 'member_pay_dialog';
 	// console.log($(that).data("cid"));
 	$('#'+id).dialog({href:url});
 	$('#'+id).dialog('open');
