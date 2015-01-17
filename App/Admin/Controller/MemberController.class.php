@@ -197,23 +197,23 @@ class MemberController extends CommonController {
 	/**
 	 * 编辑栏目
 	 */
-	public function categoryEdit($id){
-		$category_db = D('Category');
+	public function memberEdit($id){
+		$member_db = D('Member');
 		if(IS_POST){
 			$data = I('post.info');
-    		$data['ismenu'] = $data['ismenu'] ? '1' : '0';
-    		$res = $category_db->where(array('catid'=>$id))->save($data);
+    		// $data['ismenu'] = $data['ismenu'] ? '1' : '0';
+    		$res = $member_db->where(array('cid'=>$id))->save($data);
     		if($res){
-    			$category_db->clearCatche();
-    			$this->success('操作成功');
+    			$member_db->clearCatche();
+    			$this->success('更新操作成功');
     		}else {
-    			$this->error('操作失败');
+    			$this->error('更新操作失败');
     		}
 		}else{
-			$info = $category_db->where(array('catid'=>$id))->find();
-			$this->assign('info', $info);
-			$this->assign('typelist', C('CONTENT_CATEGORY_TYPE'));
-			$this->display('category_edit');
+			$member = $member_db->where(array('cid'=>$id))->find();
+			$this->assign('member', $member);
+			$this->assign('typelist', dict_attr('MEMER'));
+			$this->display('member_edit');
 		}
 	}
 	

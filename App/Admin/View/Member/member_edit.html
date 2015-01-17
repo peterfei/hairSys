@@ -1,0 +1,81 @@
+<script type="text/javascript">
+$(function(){
+	// $('#category_category_add_dialog_form_parentid').combotree({url:'<{:U('Category/public_categorySelect')}>'});
+	$.formValidator.initConfig({formID:"member_member_edit_dialog_form",onError:function(msg){/*$.messager.alert('错误提示', msg, 'error');*/},onSuccess:memberEditDialogFormSubmit,submitAfterAjaxPrompt:'有数据正在异步验证，请稍等...',inIframe:true});
+	
+	
+})
+function memberEditDialogFormSubmit(){
+	$.post('<{:U('Member/memberEdit?id='.$member['cid'])}>', $("#member_member_edit_dialog_form").serialize(), function(res){
+		if(!res.status){
+			$.messager.alert('提示信息', res.info, 'error');
+		}else{
+			$.messager.alert('提示信息', res.info, 'info');
+			$('#member_member_edit_dialog').dialog('close');
+			memberMemberListRefresh();
+		}
+	})
+}
+function categoryCategoryAddDialogFormTypeChange(val){
+	if(val == '2'){
+		$('#category_category_add_dialog_form_url').show();
+	}else{
+		$('#category_category_add_dialog_form_url').val('');;
+		$('#category_category_add_dialog_form_url').hide();
+	}
+}
+</script>
+<form id="member_member_edit_dialog_form">
+<table width="100%">
+	<tr>
+		<td width="80">会员名称：</td>
+		<td><input id="member_add_dialog_form_name" name="info[name]" class="text"  style="width:180px;height:22px" value="<{$member.name}>" /></td>
+		<td><div id="member_add_dialog_form_nameTip"></div></td>
+	</tr>
+	<tr>
+		<td width="80">会员卡号：</td>
+		<td><input id="member_add_dialog_form_cid" name="info[cid]" class="text"  style="width:180px;height:22px" value="<{$member.cid}>"/>
+		</td>
+		<td><div id="member_add_dialog_form_cidTip"></div>
+
+		</td>
+	</tr>
+	<tr>
+		<td>手机号：</td>
+		<td><input id="member_add_dialog_form_phone" name="info[phone]" type="text" style="width:180px;height:22px" value="<{$member.phone}>"/>
+		</td>
+		<td><div id="member_add_dialog_form_phoneTip"></div></td>
+	</tr>
+	<tr>
+		<td>性别：</td>
+		<td colspan="2">
+			<label><input name="info[sex]" value="1" type="radio" checked />男</label>
+			<label><input name="info[sex]" value="0" type="radio" />女</label>
+		</td>
+	</tr>
+	<tr>
+		<td>会员卡等级：</td>
+		<td colspan="2">
+		<select id="member_add_dialog_form_level" name="info[level]" class="easyui-combobox" data-options="editable:false,panelHeight:'auto',onChange:categoryCategoryAddDialogFormTypeChange" style="width:80px">
+				<foreach name="typelist" item="type" key="key">
+					<option value="<{$key}>" <eq name="member.level" value="$key">selected</eq>><{$type.name}></option>
+				</foreach>
+			</select>
+			
+		</td>
+	</tr>
+	<tr>
+		<td>余额：</td>
+		<td>
+			<input id="member_add_dialog_form_blance" name="info[blance]" class="text"  style="width:40px;height:22px" value="<{$member.blance}>" />
+		</td>
+		<td><div id="member_add_dialog_form_blanceTip"></div></td>
+	</tr>
+	
+	<tr>
+		<td>描述：</td>
+		<td colspan="2"><textarea name="info[remark]" style="width:80%;height:60px"><{$member.remark}></textarea></td>
+	</tr>
+	
+</table>
+</form>

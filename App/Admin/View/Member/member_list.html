@@ -25,7 +25,7 @@
 <div id="member_add_dialog" class="easyui-dialog" title="增加会员" data-options="modal:true,closed:true,iconCls:'icons-application-application_add',buttons:[{text:'确定',iconCls:'icons-other-tick',handler:function(){$('#member_add_dialog_form').submit();}},{text:'取消',iconCls:'icons-arrow-cross',handler:function(){$('#member_add_dialog').dialog('close');}}]" style="width:600px;height:400px;"></div>
 
 <!-- 编辑栏目 -->
-<div id="member_edit_dialog" class="easyui-dialog" title="编辑栏目" data-options="modal:true,closed:true,iconCls:'icons-application-application_edit',buttons:[{text:'确定',iconCls:'icons-other-tick',handler:function(){$('#member_edit_dialog_form').submit();}},{text:'取消',iconCls:'icons-arrow-cross',handler:function(){$('#member_edit_dialog').dialog('close');}}]" style="width:500px;height:300px;"></div>
+<div id="member_member_edit_dialog" class="easyui-dialog" title="编辑栏目" data-options="modal:true,closed:true,iconCls:'icons-application-application_edit',buttons:[{text:'确定',iconCls:'icons-other-tick',handler:function(){$('#member_member_edit_dialog_form').submit();}},{text:'取消',iconCls:'icons-arrow-cross',handler:function(){$('#member_member_edit_dialog').dialog('close');}}]" style="width:500px;height:300px;"></div>
 
 <!-- 查看详细信息 -->
 <div id="member_add_detail_dialog" class="easyui-dialog word-wrap" title="增加会员消费记录" data-options="modal:true,closed:true,iconCls:'icons-other-information',buttons:[{text:'增加消费',iconCls:'icons-other-tick',handler:function(){$('#member_add_detail_dialog_form').submit();}},{text:'关闭',iconCls:'icons-arrow-cross',handler:function(){$('#member_add_detail_dialog').dialog('close');}}]" style="width:600px;height:360px;padding:5px"></div>
@@ -41,11 +41,11 @@
 // 	{ text: '排序', iconCls: 'icons-arrow-arrow_down', handler: memberListOrder }
 // ];
 // //排序格式化
-// function categoryCategoryListOrderFormatter(val, arr){
-// 	return '<input class="category_categorylist_order_input" type="text" name="order['+arr['catid']+']" value="'+ val +'" size="2" style="text-align:center">';
+// function memberMemberListOrderFormatter(val, arr){
+// 	return '<input class="member_memberlist_order_input" type="text" name="order['+arr['catid']+']" value="'+ val +'" size="2" style="text-align:center">';
 // }
 // //类型格式化
-// function categoryCategoryListTypeFormatter(key){
+// function memberMemberListTypeFormatter(key){
 // 	var list = <{:json_encode(C('CONTENT_CATEGORY_TYPE'))}>;
 // 	return list[key] || null;
 // }
@@ -61,8 +61,8 @@ function memberListOperateFormatter(id){
 	var btn = [];
 	btn.push('<a href="javascript:;" onclick="memberDetailDialog(this)"  data-cid="'+id+'">消费</a>');
 	btn.push('<a href="javascript:;" onclick="memberPayDialog(this)"  data-cid="'+id+'">充值</a>');
-	// btn.push('<a href="javascript:;" onclick="categoryCategoryListEdit('+id+')">修改</a>');
-	// btn.push('<a href="javascript:;" onclick="categoryCategoryListDelete('+id+')">删除</a>');
+	btn.push('<a href="javascript:;" onclick="memberMemberListEdit('+id+')">修改</a>');
+	btn.push('<a href="javascript:;" onclick="memberMemberListDelete('+id+')">删除</a>');
 	return btn.join(' | ');
 }
 
@@ -80,25 +80,25 @@ function memberListAdd(parentid){
 	$('#member_add_dialog').dialog('open');
 }
 //编辑
-function categoryCategoryListEdit(id){
+function memberMemberListEdit(id){
 	if(typeof(id) !== 'number'){
 		$.messager.alert('提示信息', '未选择栏目', 'error');
 		return false;
 	}
-	var url = '<{:U('Category/categoryEdit')}>';
+	var url = '<{:U('Member/memberEdit')}>';
 	url += url.indexOf('?') != -1 ? '&id='+id : '?id='+id;
-	$('#category_category_edit_dialog').dialog({href:url});
-	$('#category_category_edit_dialog').dialog('open');
+	$('#member_member_edit_dialog').dialog({href:url});
+	$('#member_member_edit_dialog').dialog('open');
 }
 //删除
-function categoryCategoryListDelete(id){
+function memberMemberListDelete(id){
 	if(typeof(id) !== 'number'){
 		$.messager.alert('提示信息', '未选择菜单', 'error');
 		return false;
 	}
 	$.messager.confirm('提示信息', '确定要删除吗？', function(result){
 		if(!result) return false;
-		$.post('<{:U('Category/categoryDelete')}>', {id: id}, function(res){
+		$.post('<{:U('Member/memberDelete')}>', {id: id}, function(res){
 			if(!res.status){
 				$.messager.alert('提示信息', res.info, 'error');
 			}else{
@@ -110,7 +110,7 @@ function categoryCategoryListDelete(id){
 }
 //排序
 function memberListOrder(){
-	$.post('<{:U('Member/memberOrder')}>', $('.category_categorylist_order_input').serialize(), function(res){
+	$.post('<{:U('Member/memberOrder')}>', $('.member_memberlist_order_input').serialize(), function(res){
 		if(!res.status){
 			$.messager.alert('提示信息', res.info, 'error');
 		}else{
