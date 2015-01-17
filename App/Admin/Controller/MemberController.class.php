@@ -220,15 +220,15 @@ class MemberController extends CommonController {
 	/**
 	 * 删除栏目
 	 */
-	public function categoryDelete($id = 0){
+	public function memberDelete($id = 0){
 		if($id && IS_POST){
-			$category_db = D('Category');
-    		$result = $category_db->where(array('catid'=>$id))->delete();
+			$member_db = D('Member');
+    		$result = $member_db->where(array('cid'=>$id))->delete();
     		if($result){
-    			$category_db->clearCatche();
+    			$member_db->clearCatche();
     			$this->success('删除成功');
     		}else {
-    			$this->error('删除失败');
+    			$this->error('不能删除已有明细记录的会员数据!');
     		}
     	}else{
 			$this->error('删除失败');
