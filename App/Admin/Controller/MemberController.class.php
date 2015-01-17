@@ -202,7 +202,7 @@ class MemberController extends CommonController {
 		if(IS_POST){
 			$data = I('post.info');
     		// $data['ismenu'] = $data['ismenu'] ? '1' : '0';
-    		$res = $member_db->where(array('cid'=>$id))->save($data);
+    		$res = $member_db->where("cid= '$id' ")->save($data);
     		if($res){
     			$member_db->clearCatche();
     			$this->success('更新操作成功');
@@ -210,7 +210,8 @@ class MemberController extends CommonController {
     			$this->error('更新操作失败');
     		}
 		}else{
-			$member = $member_db->where(array('cid'=>$id))->find();
+			$member = $member_db->where("cid= '$id' ")->find();
+			trace($member);
 			$this->assign('member', $member);
 			$this->assign('typelist', dict_attr('MEMER'));
 			$this->display('member_edit');

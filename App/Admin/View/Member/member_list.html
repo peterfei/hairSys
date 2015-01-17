@@ -67,7 +67,7 @@ function memberListOperateFormatter(id){
 	var btn = [];
 	btn.push('<a href="javascript:;" onclick="memberDetailDialog(this)"  data-cid="'+id+'">消费</a>');
 	btn.push('<a href="javascript:;" onclick="memberPayDialog(this)"  data-cid="'+id+'">充值</a>');
-	btn.push('<a href="javascript:;" onclick="memberMemberListEdit('+id+')">修改</a>');
+	btn.push('<a href="javascript:;" onclick="memberMemberListEdit(this)"  data-cid="'+id+'">修改</a>');
 	btn.push('<a href="javascript:;" onclick="memberMemberListDelete('+id+')">删除</a>');
 	return btn.join(' | ');
 }
@@ -86,13 +86,14 @@ function memberListAdd(parentid){
 	$('#member_add_dialog').dialog('open');
 }
 //编辑
-function memberMemberListEdit(id){
-	if(typeof(id) !== 'number'){
-		$.messager.alert('提示信息', '未选择栏目', 'error');
-		return false;
-	}
+function memberMemberListEdit(that){
+	// if(typeof(id) !== 'number'){
+	// 	$.messager.alert('提示信息', '未选择栏目', 'error');
+	// 	return false;
+	// }
+	// console.log(id);
 	var url = '<{:U('Member/memberEdit')}>';
-	url += url.indexOf('?') != -1 ? '&id='+id : '?id='+id;
+	url += url.indexOf('?') != -1 ? '&id='+$(that).data("cid") : '?id='+$(that).data("cid");
 	$('#member_member_edit_dialog').dialog({href:url});
 	$('#member_member_edit_dialog').dialog('open');
 }
