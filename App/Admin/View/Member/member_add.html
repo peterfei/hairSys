@@ -3,7 +3,12 @@ $(function(){
 	$('#category_category_add_dialog_form_parentid').combotree({url:'<{:U('Category/public_categorySelect')}>'});
 	$.formValidator.initConfig({formID:"member_add_dialog_form",onError:function(msg){/*$.messager.alert('错误提示', msg, 'error');*/},onSuccess:memberAddDialogFormSubmit,submitAfterAjaxPrompt:'有数据正在异步验证，请稍等...',inIframe:true});
 	$("#member_add_dialog_form_name").formValidator({onShow:"请输入会员名称",onFocus:"会员名称不能为空",onCorrect:"输入正确"}).inputValidator({min:1,empty:{leftEmpty:false,rightEmpty:false,emptyError:'会员名称不能有空格'},onError:"会员名称不能为空"});
-	$("#member_add_dialog_form_cid").formValidator({onShow:"请输入会员卡号",onFocus:"会员卡号不能为空",onCorrect:"输入正确"}).inputValidator({min:1,empty:{leftEmpty:false,rightEmpty:false,emptyError:'会员卡号不能有空格'},onError:"会员卡号不能为空"}).ajaxValidator({
+	$("#member_add_dialog_form_cid").formValidator({onShow:"请输入会员卡号",onFocus:"会员卡号不能为空",onCorrect:"输入正确"}).inputValidator({min:1,empty:{leftEmpty:false,rightEmpty:false,emptyError:'会员卡号不能有空格'},onError:"会员卡号不能为空"}).regexValidator({
+		regExp:"^[0-9]*$",
+		param : "",
+		dataType:"string",
+		onError:"卡号必须为数字"
+     }).ajaxValidator({
 			type: "post",
 			url: "<{:U('Member/public_cidCheck')}>",
 			data : {cid:function(){return $("#member_add_dialog_form_cid").val()} },
