@@ -38,7 +38,7 @@ class MemberController extends CommonController {
 			$limit=($page - 1) * $rows . "," . $rows;
 			$total = $member_db->where($where)->count();
 			$order = "modified ".$order.", id desc";
-			$field= array('cid as operateid','cid','name','sex','phone','status');
+			$field= array('cid as operateid','cid','name','sex','phone','status','level');
 			$list = $total ? $member_db->field($field)->where($where)->order($order)->limit($limit)->select() : array();
     		$data = array('total'=>$total, 'rows'=>$list);
     		$this->ajaxReturn($data);
@@ -57,7 +57,7 @@ class MemberController extends CommonController {
 		        'fields' => array(
 		        	'卡号'  => array('field'=>'cid','width'=>20,'align'=>'center','formatter'=>'memberViewFormatter'),
 		        	'会员名称' => array('field'=>'name','width'=>15),
-		        	'会员性别' => array('field'=>'sex','width'=>10,'formatter'=>'memberSexFormatter'),
+		        	'会员级别' => array('field'=>'level','width'=>10,'formatter'=>'memberLevelFormatter'),
 		        	'会员电话'    => array('field'=>'phone','width'=>20),
     				'状态'    => array('field'=>'status','width'=>10,'formatter'=>'memberStatusFormatter'),
 		        	'管理操作' => array('field'=>'operateid','width'=>50,'align'=>'center','formatter'=>'memberListOperateFormatter'),

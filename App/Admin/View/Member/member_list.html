@@ -50,8 +50,14 @@
 // 	return list[key] || null;
 // }
 //状态格式化
-function memberSexFormatter(val){
-	return val == '1' ? '男' : '女';
+function memberLevelFormatter(val){
+	// return val == '1' ? '男' : '女';
+	var list = <{:json_encode(dict_attr('MEMER'))}>;
+	    // console.log(list);
+	 if(val!=0){
+	 	return list[val]["name"]||null;
+	 }
+    
 }
 function memberStatusFormatter(val){
 	return val == '0' ? '正常' : '锁定';
