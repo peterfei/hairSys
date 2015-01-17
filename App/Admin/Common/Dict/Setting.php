@@ -177,19 +177,19 @@ return array(
 	// ),
 	#会员等级设置
 	'MEMER_JUNIOR' => array(
-		'name'    => '初级会员',
+		'name'    => '店庆卡',
 		'group'   => '会员等级设置',
 		'editor'  => 'numberbox',
 		'default' => '0.90',
 	),
 	'MEMER_MIDDLE' => array(
-		'name'    => '中级会员',
+		'name'    => '金卡',
 		'group'   => '会员等级设置',
 		'editor'  => 'numberbox',
 		'default' => '0.80',
 	),
 	'MEMER_ADVANCED' => array(
-		'name'    => '高级会员',
+		'name'    => '会员充值卡',
 		'group'   => '会员等级设置',
 		'editor'  => 'numberbox',
 		'default' => '0.70',
