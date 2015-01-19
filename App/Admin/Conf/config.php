@@ -6,6 +6,17 @@ return array(
 	'SYSTEM_VERSION'        => '1.0.140315',
 
 	'SHOW_PAGE_TRACE'       => true,
+
+	'TRACE_PAGE_TABS' => array(
+		'BASE'  => '基本',
+		'FILE'  => '文件',
+		'THINK' => '流程',
+		'ERROR' => '错误',
+		'SQL'   => 'SQL',
+		'DEBUG' => '调试',
+		'USER'  => '用户'
+	),
+
 	
 	/* 内容管理栏目类型  */
 	'CONTENT_CATEGORY_TYPE' => array(0 => '栏目', 1 => '页面', 2 => '链接'),

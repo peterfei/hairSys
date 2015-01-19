@@ -1,0 +1,66 @@
+<taglib name="Admin\TagLib\EasyUI" />
+
+<easyui:datagrid options="datagrid.options" fields="datagrid.fields" />
+<div id="statistics_list_datagrid_toolbar" style="padding:1px;height:auto">
+	<form style="border-bottom:1px solid #ddd;margin-bottom:1px;padding:5px">
+	    最近:
+	    <select id="daterange" class="easyui-combobox" name="daterange" style="width:80px; high:auto;">
+	        <option value="day">一天</option>
+	        <option value="week">一周</option>
+	        <option value="month">一月</option>
+	        <option value="year">一年</option>
+    	</select>
+		开始时间:
+		<input id="begindate" class="easyui-datebox" data-options="sharedCalendar:'#cc'">		
+		结束时间: 
+		<input id="enddate" class="easyui-datebox" data-options="sharedCalendar:'#cc'">
+		<!-- 时 间: <input name="search[begin]" class="easyui-datebox" style="width:100px">
+		至: <input name="search[end]" class="easyui-datebox" style="width:100px"> -->
+		
+		<a href="javascript:;" onclick="searchByDateRange()" class="easyui-linkbutton" iconCls="icons-map-magnifier">搜索</a>
+	</form>
+	<div id="cc" class="easyui-calendar"></div>
+</div>
+
+<script type="text/javascript">
+$('#daterange').combobox({
+	onSelect: searchBySelect
+});
+
+function searchBySelect() {
+	var queryParams = $('#statistics_statisticslist_datagrid').datagrid('options').queryParams;
+	queryParams['search[createdtime]'] = $('#daterange').combobox('getValue');
+	console.log(queryParams);
+	$('#statistics_statisticslist_datagrid').datagrid('reload');
+}
+
+//刷新
+function statisticsListRefresh(){
+	// $('#member_statisticsList_treegrid').html('');
+	$('#statistics_list_datagrid').datagrid('reload');
+}
+
+//排序
+function statisticsListOrder(){
+	$.post('<{:U('Member/memberOrder')}>', $('.category_categorylist_order_input').serialize(), function(res){
+		if(!res.status){
+			$.messager.alert('提示信息', res.info, 'error');
+		}else{
+			$.messager.alert('提示信息', res.info, 'info');
+			statisticsListRefresh();
+		}
+	}, 'json');
+}
+
+//搜索
+function searchByDateRange(){
+	var queryParams = $('#statistics_statisticslist_datagrid').datagrid('options').queryParams;
+	var begindate = $('#begindate').datebox('getValue');
+	console.log(begindate);
+	var enddate = $('#enddate').datebox('getValue');
+	console.log(enddate);
+	queryParams['search[createdtime]'] = [begindate, enddate];
+	console.log(queryParams);
+	$('#statistics_statisticslist_datagrid').datagrid('reload');
+}
+</script>
