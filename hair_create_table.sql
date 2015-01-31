@@ -164,21 +164,22 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `app2_cost`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `app2_cost` (
+CREATE TABLE IF NOT EXISTS `app2_cost` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `pid` varchar(10) NOT NULL COMMENT '项目ID',
+  `action` varchar(10) NOT NULL COMMENT '顾客行为(充值, 洗, 剪, 吹, 染,烫)',
+  `cid` varchar(20) DEFAULT NULL COMMENT '会员卡号',
   `eid` int(11) NOT NULL COMMENT '发型师ID',
   `aid` int(11) DEFAULT NULL COMMENT '助理ID',
-  `createdtime` int(10) NOT NULL COMMENT '创建时间',
-  `modified` int(10) DEFAULT NULL COMMENT '修改时间',
-  `operate_id` int(11) NOT NULL COMMENT '操作人ID',
-  `account` decimal(10,2) NOT NULL COMMENT '应付款',
+  `payables` decimal(10,2) NOT NULL COMMENT '应付款',
   `discount` decimal(10,2) DEFAULT '0.00' COMMENT '折扣',
   `real_pay` decimal(10,2) NOT NULL COMMENT '实付',
   `point` tinyint(4) DEFAULT '0' COMMENT '是否点牌',
+  `operate_id` int(11) NOT NULL COMMENT '操作人ID',
+  `created_time` int(10) NOT NULL COMMENT '创建时间',
+  `modified_time` int(10) DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`),
   KEY `id_idx` (`eid`,`aid`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -296,12 +297,12 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `app2_member`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `app2_member` (
+CREATE TABLE IF NOT EXISTS `app2_member` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `cid` varchar(45) NOT NULL COMMENT '卡号',
   `name` varchar(45) DEFAULT NULL COMMENT '姓名',
-  `sex` int(11) DEFAULT NULL COMMENT '性别',
-  `created` varchar(45) DEFAULT NULL COMMENT '创建日期',
+  `sex` int(11) DEFAULT NULL COMMENT '性别: 男(1) 女(0)',
+  `created` int(10) NOT NULL COMMENT '创建日期',
   `level` varchar(45) DEFAULT NULL COMMENT '会员卡等级',
   `preferential_way` varchar(45) DEFAULT NULL COMMENT '优惠方式',
   `blance` decimal(10,2) DEFAULT '0.00' COMMENT '余额',
@@ -309,10 +310,11 @@ CREATE TABLE `app2_member` (
   `status` int(11) DEFAULT '0' COMMENT '状态',
   `phone` varchar(45) NOT NULL COMMENT '会员电话',
   `remark` text COMMENT '备注',
-  `modified` int(11) DEFAULT NULL,
+  `modified` int(10) DEFAULT NULL,
+  `expire_date` int(10) DEFAULT NULL COMMENT '会员卡过期日期',
   PRIMARY KEY (`id`),
   UNIQUE KEY `app2_membercol_UNIQUE` (`cid`)
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=39 ;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -332,18 +334,17 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `app2_member_detail`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `app2_member_detail` (
+CREATE TABLE IF NOT EXISTS `app2_member_detail` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `mid` int(11) NOT NULL,
   `pay` decimal(10,2) DEFAULT '0.00',
-  `re_pay` decimal(10,2) DEFAULT '0.00',
+  `re_pay` decimal(10,2) DEFAULT '0.00' COMMENT '充值历史',
   `cumulative` decimal(10,2) DEFAULT '0.00' COMMENT '明细累计',
   `createtime` int(10) NOT NULL DEFAULT '0' COMMENT '消费时间',
   `operate_id` int(11) NOT NULL COMMENT '操作人',
   PRIMARY KEY (`id`),
-  KEY `mid_idx` (`mid`),
-  CONSTRAINT `mid` FOREIGN KEY (`mid`) REFERENCES `app2_member` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=93 DEFAULT CHARSET=utf8;
+  KEY `mid_idx` (`mid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=93 ;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
