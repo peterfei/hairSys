@@ -487,6 +487,42 @@ INSERT INTO `app2_news` VALUES (1,1,'test','','/wangdong/Public/upload/2014/12/1
 UNLOCK TABLES;
 
 --
+-- Table structure for table `app2_item_data`
+--
+
+CREATE TABLE IF NOT EXISTS `app2_item_data` (
+  `group` varchar(100) CHARACTER SET utf8 COLLATE utf8_croatian_ci NOT NULL DEFAULT '' COMMENT '项目组名称',
+  `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_croatian_ci NOT NULL DEFAULT '' COMMENT '项目名称',
+  `value` varchar(100) CHARACTER SET utf8 COLLATE utf8_croatian_ci DEFAULT NULL COMMENT '项目值',
+  `editor` varchar(10) CHARACTER SET utf8 COLLATE utf8_croatian_ci DEFAULT 'text' COMMENT '是否可编辑',
+  PRIMARY KEY (`group`,`name`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='存储系统所有的用户自定义项目';
+
+--
+-- Dumping data for table `app2_item_data`
+--
+
+INSERT INTO `app2_item_data` (`group`, `name`, `value`, `editor`) VALUES
+('会员级别', '初级会员', '123', 'text'),
+('会员级别', '中级会员', '223', 'text'),
+('会员级别', '高级会员', '323', 'text'),
+('员工工种', '助理', '0.92', 'text'),
+('员工工种', '发型师', '0.94', 'text'),
+('员工工种', '中级发型师', '0.94', 'text'),
+('员工工种', '高级发型师', '0.94', 'text'),
+('美发项目', '洗', '0.94', 'text'),
+('美发项目', '剪', '0.94', 'text'),
+('美发项目', '吹', '0.9', 'text'),
+('美发项目', '染发', '0.9', 'text'),
+('美发项目', '烫发', '0.9', 'text'),
+('员工级别', '级别1', '0.9', 'text'),
+('员工级别', '级别2', '0.9', 'text'),
+('员工级别', '级别3', '0.9', 'text'),
+('门店', '门店1', '0.9', 'text'),
+('门店', '门店2', '0.9', 'text'),
+('门店', '门店3', '0.9', 'text');
+
+--
 -- Table structure for table `app2_page`
 --
 
