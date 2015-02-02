@@ -10,7 +10,7 @@ class StatisticsController extends CommonController {
     /**
      * 普通消费管理列表
      */
-    public function statisticsList($page=1, $rows=10, $search = array('createdtime' => 'day'), $order = 'desc'){
+    public function statisticsList($page=1, $rows=10, $search = array(), $order = 'desc'){
         if(IS_POST){
             //搜索
             // $cost_db = D('Cost');
@@ -38,6 +38,34 @@ class StatisticsController extends CommonController {
             //     $totalPay += $value['real_pay'];
             // }
             // $footer = [['pid' => 'Total: ', 'real_pay' => $totalPay]];
+            $cost_db = D('Cost');
+            $date_where = array();
+            foreach ($search as $k=>$v) {
+                if(!$v) continue;
+                if ($v[0] != '' && $v[1] == ''){
+                    $date_where[$k] = array('egt', strtotime($v[0]));
+                } else if($v[0] == '' && $v[1] != ''){
+                    $date_where[$k] = array('elt', strtotime($v[1]));
+                } else if($v[0] != '' && $v[1] != '') {
+                    $date_where[$k] = array('between', array(strtotime($v[0]),strtotime($v[1])));
+                }
+            }
+
+            $cost_db = D('Cost');
+            $cash_flow_where['_complex'] = $date_where;
+            $cash_flow_where['action'] = array('neq', '充值');
+            $cash_flow_where['_string'] = 'cid is null';
+            $cash_flow = $cost_db->where($cash_flow_where)->sum('real_pay');
+
+            $mem_card_flow_where['_complex'] = $date_where;
+            $mem_card_flow_where['action'] = array('neq', '充值');
+            $mem_card_flow_where['_string'] = 'cid is not null';
+            $mem_card_flow = $cost_db->where($mem_card_flow_where)->sum('real_pay');
+
+            $mem_card_topup_where['_complex'] = $date_where;
+            $mem_card_topup_where['action'] = array('eq', '充值');
+            $mem_card_topup_where['_string'] = 'cid is not null';
+            $mem_card_topup = $cost_db->where($mem_card_topup_where)->sum('real_pay');
             $total = 7;
             $list = [
                 ['name' => '现金消费(￥)', 'value' => '4000', 'group' => '营业情况'],

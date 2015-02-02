@@ -56,6 +56,10 @@ class ItemDataController extends CommonController {
     			$this->error('添加失败');
     		}
 		}else{
+			$itemdata_db = D('ItemData');
+			$groups = $itemdata_db->distinct(true)->field('group')->select();
+			trace($groups, 'groups');
+			$this->assign('groups', array('data' => $groups));
 			$this->display();
 		}
 	}
