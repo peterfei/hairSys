@@ -4,9 +4,9 @@
 <div id="statistics_propertygrid_toolbar" style="padding:1px;height:auto">
 	<form style="border-bottom:1px solid #ddd;margin-bottom:1px;padding:5px">
 		开始时间:
-		<input id="begindate" class="easyui-datebox">		
+		<input id="begindate">		
 		结束时间: 
-		<input id="enddate" class="easyui-datebox">
+		<input id="enddate">
 		<a href="javascript:;" onclick="searchByDateRange()" class="easyui-linkbutton" iconCls="icons-map-magnifier">搜索</a>
 	</form>
 	
@@ -14,9 +14,11 @@
 
 <script type="text/javascript">
 var date = new Date();
+$('#begindate').datebox().datebox('setValue', '2012-01-01');
+$('#enddate').datebox();
 console.log($('#begindate'));
 //$('#begindate').datebox('setValue', '2012-01-01');
-//$('#enddate').datebox('setValue', '6/1/2012');
+$('#enddate').datebox('setValue', '6/1/2012');
 $('#daterange').combobox({
 	onSelect: searchBySelect,
 	required: true
@@ -37,10 +39,8 @@ function detailFormatter(index,row) {
 function searchByDateRange() {
 	var queryParams = $('#statistics_statisticslist_datagrid').datagrid('options').queryParams;
 	var begindate = $('#begindate').datebox('getValue');
-	console.log(begindate);
-	var enddate = $('#enddate').datebox('getValue');
-	console.log(enddate);
-	queryParams['search[createdtime]'] = [begindate, enddate];
+	queryParams['search[begindate]'] = $('#begindate').datebox('getValue');
+	queryParams['search[enddate]'] = $('#enddate').datebox('getValue');
 	console.log(queryParams);
 	$('#statistics_statisticslist_datagrid').datagrid('reload');
 }

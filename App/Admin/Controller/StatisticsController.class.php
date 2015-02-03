@@ -3,86 +3,88 @@ namespace Admin\Controller;
 use Admin\Controller\CommonController;
 
 /**
- * 普通消费管理模块
- * @author peterfei
+ *  统计管理模块
+ * @author Daniel
  */
 class StatisticsController extends CommonController {
-    /**
-     * 普通消费管理列表
-     */
-    public function statisticsList($page=1, $rows=10, $search = array(), $order = 'desc'){
+    public function statisticsList($search = array()){
         if(IS_POST){
             //搜索
-            // $cost_db = D('Cost');
-            // trace($search, 'Search: ', 'DEBUG');
-            // $where = array();
-            // foreach ($search as $k=>$v) {
-            //     if(!$v) continue;
-            //     if ($v[0] != '' && $v[1] == ''){
-            //         $where = $k . " >= " . strtotime($v[0]);
-            //     } else if($v[0] == '' && $v[1] != ''){
-            //         $where = $k . " <= " . strtotime($v[1]);
-            //     } else if($v[0] != '' && $v[1] != '') {
-            //         $where = $k . " between " . strtotime($v[0]) . " and " . strtotime($v[1]);
-            //     }
-            // } 
-            // // $where = implode(' and ', $where);
-            // trace($where,'Where ');
-            // $limit=($page - 1) * $rows . "," . $rows;
-            // $total = $cost_db->where($where)->count();
-            // $order = "id ".$order;
-            // $field= array('pid','real_pay','FROM_UNIXTIME(createdtime, "%Y-%m-%d %H:%i:%s") as modified','operate_id','point');
-            // $list = $total ? $cost_db->field($field)->where($where)->order($order)->limit($limit)->select() : array();
-            // $totalPay = 0;
-            // foreach ($list as $value) {
-            //     $totalPay += $value['real_pay'];
-            // }
-            // $footer = [['pid' => 'Total: ', 'real_pay' => $totalPay]];
-            $cost_db = D('Cost');
             $date_where = array();
-            foreach ($search as $k=>$v) {
-                if(!$v) continue;
-                if ($v[0] != '' && $v[1] == ''){
-                    $date_where[$k] = array('egt', strtotime($v[0]));
-                } else if($v[0] == '' && $v[1] != ''){
-                    $date_where[$k] = array('elt', strtotime($v[1]));
-                } else if($v[0] != '' && $v[1] != '') {
-                    $date_where[$k] = array('between', array(strtotime($v[0]),strtotime($v[1])));
-                }
+            if (! count($search)) {
+                $date_where['created_time'] = array('between', array($this->getBegin(), $this->getEnd()));
+            } else if ($search['beginDate'] == $search['endDate']) {
+                $date_where['created_time'] = array('between', array($this->getBegin($search['beginDate']), $this->getEnd($search['endDate'])));
+            } else if ($search['beginDate'] != '' && $search['endDate'] == '') {
+                $date_where['created_time'] = array('egt', strtotime($search['beginDate']));
+            } else if($search['beginDate'] == '' && $search['endDate'] != '') {
+                $date_where['created_time'] = array('elt', strtotime($search['endDate']));
+            } else if($search['beginDate'] != '' && $search['endDate'] != '') {
+                $date_where['created_time'] = array('between', array(strtotime($search['beginDate']),strtotime($search['endDate'])));
             }
-
+            
             $cost_db = D('Cost');
+            //Get cash flows in specific date range
             $cash_flow_where['_complex'] = $date_where;
             $cash_flow_where['action'] = array('neq', '充值');
             $cash_flow_where['_string'] = 'cid is null';
             $cash_flow = $cost_db->where($cash_flow_where)->sum('real_pay');
-
+            
+            //Get member card flows in specific date range
             $mem_card_flow_where['_complex'] = $date_where;
             $mem_card_flow_where['action'] = array('neq', '充值');
             $mem_card_flow_where['_string'] = 'cid is not null';
             $mem_card_flow = $cost_db->where($mem_card_flow_where)->sum('real_pay');
 
+            //Get member card top up flows in specific date range
             $mem_card_topup_where['_complex'] = $date_where;
             $mem_card_topup_where['action'] = array('eq', '充值');
             $mem_card_topup_where['_string'] = 'cid is not null';
             $mem_card_topup = $cost_db->where($mem_card_topup_where)->sum('real_pay');
+
+            //Get member number of consumption in specific date range
+            $mem_consume_num_where['_complex'] = $date_where;
+            $mem_consume_num_where['action'] = array('neq', '充值');
+            $mem_consume_num = $cost_db->where($mem_consume_num_where)->count('cid');
+
+            //Get non member number of consumption in specific date range
+            $non_mem_consume_num_where['_complex'] = $date_where;
+            $non_mem_consume_num_where['action'] = array('neq', '充值');
+            $non_mem_consume_num_where['_string'] = 'cid is null';
+            $non_mem_consume_num = $cost_db->where($non_mem_consume_num_where)->count();
+
+            $member_db = D('Member');
+            //Get new member number in specific date range
+            $new_mem_where['_complex'] = $date_where;
+            $new_mem_num = $member_db->where($new_mem_where)->count('cid');
+
+            //Get expired member in specific date range
+            $invalid_mem_where['_complex'] = $date_where;
+            $invalid_mem_where['status'] = array('lt', 0);
+            $invalid_mem_num = $member_db->where($invalid_mem_where)->count('cid');
+
+
+            trace($cash_flow, "cash_flow");
+            trace($mem_card_flow, "mem_card_flow");
+            trace($mem_card_topup, "mem_card_topup");
+            trace($mem_consume_num, "mem_consume_num");
+            trace($non_mem_consume_num, "non_mem_consume_num");
+            trace($new_mem_num, "new_mem_num");
+            trace($invalid_mem_num, "invalid_mem_num");
+
+
             $total = 7;
             $list = [
-                ['name' => '现金消费(￥)', 'value' => '4000', 'group' => '营业情况'],
-                ['name' => '会员卡消费(￥)', 'value' => '5000', 'group' => '营业情况'],
-                ['name' => '会员卡充值(￥)', 'value' => '8000', 'group' => '营业情况'],
-                ['name' => '新增会员(#)', 'value' => '40', 'group' => '其他'],
-                ['name' => '过期会员(#)', 'value' => '30', 'group' => '其他'],
-                ['name' => '会员消费人次(#)', 'value' => '200', 'group' => '其他'],
-                ['name' => '普通消费人次(#)', 'value' => '500', 'group' => '其他',"editor" => [
-                    "type" => "validatebox",
-                    "options" => [
-                        "validType" => "email"
-                    ]]
-                ]
+                ['name' => '现金消费(￥)', 'value' => $cash_flow, 'group' => '营业情况'],
+                ['name' => '会员卡消费(￥)', 'value' => $mem_card_flow, 'group' => '营业情况'],
+                ['name' => '会员卡充值(￥)', 'value' => $mem_card_topup, 'group' => '营业情况'],
+                ['name' => '新增会员(#)', 'value' => $new_mem_num, 'group' => '其他'],
+                ['name' => '未激活会员(#)', 'value' => $invalid_mem_num, 'group' => '其他'],
+                ['name' => '会员消费人次(#)', 'value' => $mem_consume_num, 'group' => '其他'],
+                ['name' => '普通消费人次(#)', 'value' => $non_mem_consume_num, 'group' => '其他']
             ];
             trace($list, 'List');
-            $data = array('total'=>$total, 'rows'=>$list);
+            $data = array('total' => 7, 'rows' => $list);
             $this->ajaxReturn($data);
         }else{
             $menu_db = D('Menu');
@@ -104,83 +106,25 @@ class StatisticsController extends CommonController {
         }
     }
 
-    public function sublist($pid, $createdtime) {
-        $cost_db = D('Cost');
-        $where = array();
-        foreach ($search as $k=>$v) {
-            if(!$v) continue;
-            switch ($createdtime){
-                case 'day':
-                case 'week':
-                case 'month':
-                case 'year': 
-                    $where = "createdtime" . " between " . self::getBegin($v) . " and " . self::getEnd($v) . " and pid = '" . $pid . "'"; 
-                    break;
-                default:
-                    if ($v[0] != '' && $v[1] == ''){
-                        $where = $k . " >= " . strtotime($v[0]);
-                    } else if($v[0] == '' && $v[1] != ''){
-                        $where = $k . " <= " . strtotime($v[1]);
-                    } else if($v[0] != '' && $v[1] != '') {
-                        $where = $k . " between " . strtotime($v[0]) . " and " . strtotime($v[1]);
-                    }
-                    break;
-            }
-        } 
-        // $where = implode(' and ', $where);
-        trace($where,'Where ');
-        $limit=($page - 1) * $rows . "," . $rows;
-        $total = $cost_db->where($where)->count();
-        $order = "id ".$order;
-        $field= array('pid','real_pay','FROM_UNIXTIME(modified, "%Y-%m-%d %H:%i:%s") as modified','operate_id','point');
-        $list = $total ? $cost_db->field($field)->where($where)->order($order)->limit($limit)->select() : array();
-        $totalPay = 0;
-        foreach ($list as $value) {
-            $totalPay += $value['real_pay'];
-        }
-        $footer = [['pid' => 'Total: ', 'real_pay' => $totalPay]];
-        trace($list, 'List');
-        $data = array('total'=>$total, 'rows'=>$list, 'footer' => $footer);
-        $this->ajaxReturn($data);
-    }
-
     #每天的开始和结束
-    private function getBegin($date = 'day') {
+    private function getBegin($date = '') {
         $begin = 0;
-        switch ($date) {
-            case 'day':
-                $begin = mktime(0,0,0,date('m'),date('d'),date('Y'));
-            case 'week':
-                $begin = mktime(0,0,0,date('m'),date('d')-date('w')+1,date('Y'));
-                break;
-            case 'month':
-                $begin = mktime(0,0,0,date('m'),1,date('Y'));
-                break;
-            case 'year':
-                $begin = mktime(0,0,0,1,1,date('Y'));
-                break;
-            default:
-                break;
+        if ($date == '') {
+            $begin = mktime(0,0,0,date('m'),date('d'),date('Y'));
+            trace($begin, 'Begin Time');
+        } else {
+            $begin = strtotime($date);
         }
         return $begin;
     }
 
-    private function getEnd($date = 'day') {
+    private function getEnd($date = '') {
         $end = 0;
-        switch ($date) {
-            case 'day':
-                $end = mktime(0,0,0,date('m'),date('d')+1,date('Y'))-1;
-            case 'week':
-                $end = mktime(23,59,59,date('m'),date('d')-date('w')+7,date('Y'));
-                break;
-            case 'month':
-                $end = mktime(23,59,59,date('m'),date('t'),date('Y'));
-                break;
-            case 'year':
-                $end = mktime(23,59,59,12,date('t'),date('Y'));
-                break;
-            default:
-                break;
+        if ($end == '') {
+            $end = mktime(23,59,59,date('m'),date('d'),date('Y'));
+            trace($end, "End Time");
+        } else {
+            $end = strtotime($date . ' 23:59:59');
         }
         return $end;
     }

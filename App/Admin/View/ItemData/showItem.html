@@ -48,7 +48,7 @@ function saveData(){
 	for(var i=0; i<rows.length; i++){
 		data.push({'group': rows[i]['group'], 'name': rows[i]['name'], 'value': rows[i]['value'], 'editor': rows[i]['editor']});
 	}
-	$.post('<{:U('ItemData/item?dosubmit=1')}>', {data: data}, function(res){
+	$.post('<{:U('ItemData/showItem?dosubmit=1')}>', {data: data}, function(res){
 		if(!res.status){
 			$.messager.alert('提示信息', res.info, 'error');
 		}else{
@@ -61,8 +61,20 @@ function openAddItemDlg() {
 	$('#add_dlg').dialog({href:'<{:U('ItemData/addItem')}>'});
 	$('#add_dlg').dialog('open');
 }
+
 function addItem(){
-	alert('hhhhhhh');
+	var data = [];
+	var rows = $('#' + propertygrid_id).propertygrid('getChanges');
+	for(var i=0; i<rows.length; i++){
+		data.push({'group': rows[i]['group'], 'name': rows[i]['name'], 'value': rows[i]['value']});
+	}
+	$.post('<{:U('ItemData/showItem?dosubmit=1')}>', {data: data}, function(res){
+		if(!res.status){
+			$.messager.alert('提示信息', res.info, 'error');
+		}else{
+			$.messager.alert('提示信息', res.info, 'info');
+		}
+	}, 'json');
 }
 
 //刷新
