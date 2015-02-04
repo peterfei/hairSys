@@ -1,0 +1,20 @@
+[ 2015-02-04T20:06:21+08:00 ] ::1 /hairsys/index.php?m=admin&c=index&a=public_sessionlife
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.138412s ]
+SQL: SHOW COLUMNS FROM `app2_setting` [ RunTime:0.614593s ]
+SQL: SELECT `key`,`value` FROM `app2_setting`  [ RunTime:0.204036s ]
+INFO: Run \Common\Behavior\SettingBehavior [ RunTime:2.096645s ]
+INFO: [ app_begin ] --END-- [ RunTime:2.316843s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.280966s ]
+INFO: [ app_end ] --END-- [ RunTime:0.281216s ]
+
+[ 2015-02-04T20:16:13+08:00 ] ::1 /hairsys/index.php?m=admin&c=index&a=public_sessionlife
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000983s ]
+INFO: Run \Common\Behavior\SettingBehavior [ RunTime:0.057120s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.073648s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001095s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001182s ]
+
