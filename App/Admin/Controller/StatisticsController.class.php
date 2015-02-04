@@ -13,14 +13,14 @@ class StatisticsController extends CommonController {
             $date_where = array();
             if (! count($search)) {
                 $date_where['created_time'] = array('between', array($this->getBegin(), $this->getEnd()));
-            } else if ($search['beginDate'] == $search['endDate']) {
-                $date_where['created_time'] = array('between', array($this->getBegin($search['beginDate']), $this->getEnd($search['endDate'])));
-            } else if ($search['beginDate'] != '' && $search['endDate'] == '') {
-                $date_where['created_time'] = array('egt', strtotime($search['beginDate']));
-            } else if($search['beginDate'] == '' && $search['endDate'] != '') {
-                $date_where['created_time'] = array('elt', strtotime($search['endDate']));
-            } else if($search['beginDate'] != '' && $search['endDate'] != '') {
-                $date_where['created_time'] = array('between', array(strtotime($search['beginDate']),strtotime($search['endDate'])));
+            } else if ($search['begindate'] == $search['enddate']) {
+                $date_where['created_time'] = array('between', array($this->getBegin($search['begindate']), $this->getEnd($search['enddate'])));
+            } else if ($search['begindate'] != '' && $search['enddate'] == '') {
+                $date_where['created_time'] = array('egt', strtotime($search['begindate']));
+            } else if($search['begindate'] == '' && $search['enddate'] != '') {
+                $date_where['created_time'] = array('elt', strtotime($search['enddate']));
+            } else if($search['begindate'] != '' && $search['enddate'] != '') {
+                $date_where['created_time'] = array('between', array(strtotime($search['begindate']),strtotime($search['enddate'])));
             }
             
             $cost_db = D('Cost');
