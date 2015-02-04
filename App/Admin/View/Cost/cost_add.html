@@ -60,21 +60,31 @@ function categoryCategoryAddDialogFormTypeChange(val){
 <table width="100%">
 	<tr>
 		<td width="80">项目名称：</td>
-		<td><select id="cost_add_dialog_form_pid" name="info[pid]" class="easyui-combobox" data-options="editable:false,panelHeight:'auto',onChange:categoryCategoryAddDialogFormTypeChange" style="width:80px">
+		<td>
+			<foreach name="prjlist" item="type" key="key">
+			<input type="checkbox" name="info[pid][]" value="<{$key}>"><{$type.name}>
+			&nbsp;&nbsp;
+			</foreach>
+			<!-- <select id="cost_add_dialog_form_pid" name="info[pid]" class="easyui-combobox" data-options="editable:false,panelHeight:'auto',onChange:categoryCategoryAddDialogFormTypeChange" style="width:80px"  multiple="multiple" >
 				<foreach name="prjlist" item="type" key="key">
 					<option value="<{$key}>"><{$type.name}></option>
 				</foreach>
-			</select>
+			</select> -->
 		</td>
 		<td><div id="cost_add_dialog_form_pidTip"></div></td>
 	</tr>
 	<tr>
 		<td width="80">发型师：</td>
-		<td><select id="cost_add_dialog_form_eid" name="info[eid]" class="easyui-combobox" data-options="editable:false,panelHeight:'auto',onChange:categoryCategoryAddDialogFormTypeChange" style="width:80px">
+		<td>
+			<foreach name="emplist" item="type" key="key">
+				<input type="radio" name="info[eid]" value="<{$type.id}>"/><{$type.name}>
+				&nbsp;&nbsp;
+			</foreach>
+			<!-- <select id="cost_add_dialog_form_eid" name="info[eid]" class="easyui-combobox" data-options="editable:false,panelHeight:'auto',onChange:categoryCategoryAddDialogFormTypeChange" style="width:80px">
 				<foreach name="emplist" item="type" key="key">
 					<option value="<{$type.id}>"><{$type.name}></option>
 				</foreach>
-			</select>
+			</select> -->
 		</td>
 		<td><div id="cost_add_dialog_form_enoTip"></div>
 
@@ -82,11 +92,16 @@ function categoryCategoryAddDialogFormTypeChange(val){
 	</tr>
 	<tr>
 		<td width="80">助理：</td>
-		<td><select id="cost_add_dialog_form_aid" name="info[aid]" class="easyui-combobox" data-options="editable:false,panelHeight:'auto',onChange:categoryCategoryAddDialogFormTypeChange" style="width:80px">
+		<td>
+			<foreach name="aidlist" item="type" key="key">
+				<input type="radio" name="info[aid]" value="<{$type.id}>"/><{$type.name}>
+				&nbsp;&nbsp;
+			</foreach>
+			<!-- <select id="cost_add_dialog_form_aid" name="info[aid]" class="easyui-combobox" data-options="editable:false,panelHeight:'auto',onChange:categoryCategoryAddDialogFormTypeChange" style="width:80px">
 				<foreach name="aidlist" item="type" key="key">
 					<option value="<{$type.id}>"><{$type.name}></option>
 				</foreach>
-			</select>
+			</select> -->
 		</td>
 		<td><div id="cost_add_dialog_form_enoTip"></div>
 

@@ -34,13 +34,13 @@ class CostController extends CommonController {
 				}
 			}
 			$where = implode(' and ', $where);
-			trace($where);
+			// trace($where);
 			$limit=($page - 1) * $rows . "," . $rows;
 			$total = $cost_db->where($where)->count();
 			$order = "id ".$order;
 			$field= array('id as operateid','pid','eid','aid','account','discount','real_pay','FROM_UNIXTIME(createdtime, "%Y-%m-%d %H:%i:%s") as createdtime','FROM_UNIXTIME(modified, "%Y-%m-%d %H:%i:%s") as modified','operate_id','point');
 			$list = $total ? $cost_db->field($field)->relation('Employee')->where($where)->order($order)->limit($limit)->select() : array();
-			trace($list);
+			// trace($list);
     		$data = array('total'=>$total, 'rows'=>$list);
     		$this->ajaxReturn($data);
 		}else{
@@ -80,6 +80,8 @@ class CostController extends CommonController {
 		if(IS_POST){
 			$cost_db = D('Cost');
 			$data = I('post.info');
+			
+			$data['pid'] = implode(",", $data['pid']);
 			trace($data);
 			//添加时间
 			$data['createdtime'] = time();
@@ -155,7 +157,7 @@ class CostController extends CommonController {
   //   		$this->ajaxReturn($data);
 		$member_db = D('Member');
 		$idAttr=$member_db->where(array('cid'=>I('get.cid')))->field(array('id','blance'))->find();
-		trace($idAttr,"ID");
+		// trace($idAttr,"ID");
 		$this->assign('id',$idAttr['id']);
 		$this->assign('cumulative',$idAttr['blance']);
 		$this->display('member_add_detail');

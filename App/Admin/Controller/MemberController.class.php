@@ -41,6 +41,7 @@ class MemberController extends CommonController {
 			$field= array('cid as operateid','cid','name','sex','phone','status','level');
 			$list = $total ? $member_db->field($field)->where($where)->order($order)->limit($limit)->select() : array();
     		$data = array('total'=>$total, 'rows'=>$list);
+    		trace($data,"member",'debug');
     		$this->ajaxReturn($data);
 		}else{
 			// trace(111);
