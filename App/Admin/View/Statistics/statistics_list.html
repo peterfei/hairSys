@@ -1,0 +1,61 @@
+<taglib name="Admin\TagLib\EasyUI" />
+
+<easyui:propertygrid  options="propertygrid.options" style="width:300px"/>
+<div id="statistics_propertygrid_toolbar" style="padding:1px;height:auto">
+	<form style="border-bottom:1px solid #ddd;margin-bottom:1px;padding:5px">
+		开始时间:
+		<input id="begindate"></input>	
+		结束时间: 
+		<input id="enddate"></input>
+		<a href="javascript:;" onclick="searchByDateRange()" class="easyui-linkbutton" iconCls="icons-map-magnifier">搜索</a>
+	</form>
+</div>
+
+<script type="text/javascript">
+var begindate, enddate;
+$('#begindate').datebox({
+	onSelect: function(date) {
+		begindate = date;
+		console.log('Selected begin date is ' + begindate);
+		$('#enddate').datebox('calendar').calendar({
+        	validator: function(date) {
+        		return date >= begindate && date <= new Date();
+        	}
+    	});
+	}
+}).datebox('calendar').calendar({
+	validator: function(date) {
+	    return date <= new Date();
+	}
+});
+
+$('#enddate').datebox({
+	onSelect: function(date) {
+		enddate = date;
+		console.log('Selected end date is ' + enddate);
+		$('#begindate').datebox('calendar').calendar({
+        	validator: function(date) {
+        		return date <= enddate;
+        	}
+    	});
+	}
+}).datebox('calendar').calendar({
+	validator: function(date) {
+	    return date <= new Date();
+	}
+});
+
+var date = new Date();
+var todayStr = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+$('#begindate').datebox('setValue', todayStr);
+$('#enddate').datebox('setValue', todayStr);
+
+//搜索
+function searchByDateRange() {
+	var queryParams = $('#statistics_statisticslist_propertygrid').propertygrid('options').queryParams;
+	queryParams['search[begindate]'] = $('#begindate').datebox('getValue');
+	queryParams['search[enddate]'] = $('#enddate').datebox('getValue');
+	console.log('queryParams: ' + queryParams);
+	$('#statistics_statisticslist_propertygrid').propertygrid('reload');
+}
+</script>
