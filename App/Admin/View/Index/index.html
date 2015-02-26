@@ -66,12 +66,12 @@ $(function(){
 			top: e.pageY
 		});
 	});
-	$.messager.show({			//登录默认提示
-		title:'登录提示',
-		msg:'您好！<{$userInfo.username}> 欢迎回来！<br/>最后登录时间：<if condition="$userInfo['lastlogintime']"><{$userInfo.lastlogintime|date='Y-m-d H:i:s',###}><else/>-</if><br/>最后登录IP：<{$userInfo.lastloginip}>',
-		timeout:5000,
-		showType:'slide'
-	});
+	// $.messager.show({			//登录默认提示
+	// 	title:'登录提示',
+	// 	msg:'您好！<{$userInfo.username}> 欢迎回来！<br/>最后登录时间：<if condition="$userInfo['lastlogintime']"><{$userInfo.lastlogintime|date='Y-m-d H:i:s',###}><else/>-</if><br/>最后登录IP：<{$userInfo.lastloginip}>',
+	// 	timeout:5000,
+	// 	showType:'slide'
+	// });
 });
 //右键菜单点击事件
 function rightMenuHandler(item){
